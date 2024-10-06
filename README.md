@@ -1,2 +1,2 @@
 # JavaProjects
-JavaProjects
+JavaPractice
