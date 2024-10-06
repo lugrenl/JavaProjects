@@ -1,0 +1,23 @@
+package org.example;
+
+import java.util.Comparator;
+import java.util.List;
+
+public class Main {
+    public static void main(String[] args) {
+        NetUtils netUtils = new NetUtils();
+        List<Stock> stocks = netUtils.getStocks();
+
+        stocks.sort(Comparator.comparing(Stock::getValue));
+
+        System.out.println("The cheapest one was on " +
+                stocks.get(0).getDate() +
+                " with a value of " +
+                stocks.get(0).getValue());
+
+        System.out.println("The most expensive one was on " +
+                stocks.get(stocks.size() - 1).getDate() +
+                " with a value of " +
+                stocks.get(stocks.size() - 1).getValue());
+    }
+}
