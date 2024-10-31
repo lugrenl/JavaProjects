@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+    <context:property-placeholder location="classpath:moviePlayer.properties"/>
+
+    <bean id="actionBean"
+          init-method="init"
+          destroy-method="destroy"
+          class="org.example.genres.Action">
+    </bean>
+
+    <bean id="comedyBean"
+          init-method="init"
+          destroy-method="destroy"
+          class="org.example.genres.Comedy">
+    </bean>
+
+    <bean id="dramaBean"
+          init-method="init"
+          destroy-method="destroy"
+          class="org.example.genres.Drama">
+    </bean>
+
+    <bean id="thrillerBean"
+          init-method="init"
+          destroy-method="destroy"
+          class="org.example.genres.Thriller">
+    </bean>
+
+    <bean id="movieList" class="java.util.ArrayList">
+        <constructor-arg>
+            <list>
+                <ref bean="actionBean"/>
+                <ref bean="comedyBean"/>
+                <ref bean="dramaBean"/>
+                <ref bean="thrillerBean"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+    <bean id="moviePlayer"
+          class="org.example.MoviePlayer"
+          scope="prototype">
+        <constructor-arg ref="movieList"/>
+
+        <property name="name" value="${moviePlayer.name}"/>
+        <property name="volume" value="${moviePlayer.volume}"/>
+    </bean>
+
+    <bean id="computerBean"
+          class="org.example.Computer">
+        <constructor-arg ref="moviePlayer"/>
+    </bean>
+</beans>
