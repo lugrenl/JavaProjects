@@ -1,6 +1,8 @@
 package org.example.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.example.model.Result;
 
@@ -13,6 +15,8 @@ import java.util.stream.Collectors;
 
 @Service
 public class ResultsReader {
+    @Value("${file.path}")
+    private String path;
     private final ResultParser resultParser;
 
     @Autowired
@@ -25,11 +29,11 @@ public class ResultsReader {
      * </p>
      * Результаты хранятся в формате: Иван Иванов, М, 10 км, 55:20
      * </p>
-     *@param filePath
      *@return List
      */
-    public List<Result> readFromFile(Path filePath) {
+    public List<Result> readFromFile() {
         try {
+            Path filePath = new ClassPathResource(path).getFile().toPath();
             return Files.lines(filePath)
                     .map(resultParser::parseResult)
                     .collect(Collectors.toList());

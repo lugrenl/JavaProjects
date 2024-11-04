@@ -31,7 +31,6 @@ public class ResultParser {
         Person person = new Person(name, gender);
 
         return new Result(person, distance, time);
-
     }
 
     /**

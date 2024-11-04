@@ -3,19 +3,20 @@ package org.example.service;
 import org.example.model.Distance;
 import org.example.model.Gender;
 import org.example.model.Result;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class ResultsProcessor {
-    private final Collection<Result> results;
+    private final ResultsReader resultsReader;
 
-    public ResultsProcessor(Collection<Result> results) {
-        this.results = results;
+    @Autowired
+    public ResultsProcessor(ResultsReader resultsReader) {
+        this.resultsReader = resultsReader;
     }
 
     /**
@@ -29,11 +30,11 @@ public class ResultsProcessor {
      *@return List
      */
     public List<Result> getFastest(Gender gender, Distance distance, int limit) {
+        List<Result> results = resultsReader.readFromFile();
         return results.stream()
                 .filter(result -> result.hasGender(gender) && result.hasDistance(distance))
                 .sorted(Comparator.comparing(Result::time))
                 .limit(limit)
                 .collect(Collectors.toList());
     }
-
 }
