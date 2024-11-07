@@ -17,8 +17,4 @@ public class ScoreMap {
     public int getScore(Question question) {
         return scoreTable.getOrDefault(question, 0);
     }
-
-    public Map<Question, Integer> getScoreTable() {
-        return scoreTable;
-    }
 }

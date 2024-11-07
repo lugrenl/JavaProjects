@@ -21,7 +21,6 @@ public enum Question {
         this.questionCode = questionCode;
     }
 
-
     /**
      * Определение номера вопроса по коду из протокола результатов.
      * @param questionCode
