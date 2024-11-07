@@ -10,7 +10,7 @@ public class ResultParser {
     private static final String LINE_SEPARATOR = " - ";
 
     /**
-     * Распарсить строку из файла в {@link Result}.
+     * Парсит строку из файла в {@link Result}.
      * @param line
      * @return Result
      */

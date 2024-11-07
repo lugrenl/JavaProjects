@@ -21,6 +21,12 @@ public enum Question {
         this.questionCode = questionCode;
     }
 
+
+    /**
+     * Определение номера вопроса по коду из протокола результатов.
+     * @param questionCode
+     * @return Question
+     */
     public static Question fromCode(String questionCode) {
         return Stream.of(values())
                 .filter(question -> Objects.equals(question.questionCode, questionCode))

@@ -26,15 +26,26 @@ public class ResultsProcessor {
         this.resultsReader = resultsReader;
     }
 
+    /**
+     * Собирает данные из файла и возвращает их в виде списка <Result>.
+     * @param path
+     * @throws IOException
+     * @return List
+     */
     private List<Result> readData(String path) throws IOException {
         Path filePathToKeys = new ClassPathResource(path).getFile().toPath();
         return resultsReader.readFromFile(filePathToKeys);
     }
 
+    /**
+     * Подсчёт итогового балла.
+     * @return int
+     */
     public int getScore() {
         int score = 0;
         List<Result> keys;
         List<Result> answers;
+
         try {
             keys = readData(keysPath);
             answers = readData(answersPath);
