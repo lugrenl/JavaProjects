@@ -4,11 +4,8 @@ import org.example.datastore.ScoreMap;
 import org.example.model.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.nio.file.Path;
 import java.util.*;
 
 @Service
@@ -27,31 +24,13 @@ public class ResultsProcessor {
     }
 
     /**
-     * Собирает данные из файла и возвращает их в виде списка <Result>.
-     * @param path
-     * @throws IOException
-     * @return List
-     */
-    private List<Result> readData(String path) throws IOException {
-        Path filePathToKeys = new ClassPathResource(path).getFile().toPath();
-        return resultsReader.readFromFile(filePathToKeys);
-    }
-
-    /**
      * Подсчёт итогового балла.
      * @return int
      */
     public int getScore() {
         int score = 0;
-        List<Result> keys;
-        List<Result> answers;
-
-        try {
-            keys = readData(keysPath);
-            answers = readData(answersPath);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        List<Result> keys = resultsReader.readFromFile(keysPath);
+        List<Result> answers = resultsReader.readFromFile(answersPath);
 
         for (Result key : keys) {
             for (Result answer : answers) {

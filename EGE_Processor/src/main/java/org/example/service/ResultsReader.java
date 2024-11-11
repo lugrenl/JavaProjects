@@ -2,6 +2,7 @@ package org.example.service;
 
 import org.example.model.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -22,11 +23,12 @@ public class ResultsReader {
 
     /**
      * Чтение данных из файла.
-     * @param filePath
+     * @param path
      * @return List
      */
-    public List<Result> readFromFile(Path filePath) {
+    public List<Result> readFromFile(String path) {
         try {
+            Path filePath = new ClassPathResource(path).getFile().toPath();
             return Files.lines(filePath)
                     .map(resultParser::parseResult)
                     .collect(Collectors.toList());
