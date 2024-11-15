@@ -30,8 +30,8 @@ public class ContactController {
     }
 
     @GetMapping
-    public List<ContactDto> getAllContact() {
-        return contactFacade.getAllContactS();
+    public List<ContactDto> getAllContacts() {
+        return contactFacade.getAllContacts();
     }
 
     @PutMapping("/{contactId}/{name}/{surname}/{phoneNumber}/{email}")

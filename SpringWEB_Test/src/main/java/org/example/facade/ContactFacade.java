@@ -24,7 +24,7 @@ public class ContactFacade {
         return new ContactDto(contactDao.getContact(contactId));
     }
 
-    public List<ContactDto> getAllContactS() {
+    public List<ContactDto> getAllContacts() {
         return contactDao.getAllContacts().stream().map(ContactDto::new).toList();
     }
 
