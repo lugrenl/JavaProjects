@@ -22,7 +22,7 @@ public class SummaryServlet extends HttpServlet {
 
         context.setAttribute("freeMoney", salary - rent);  // сохраняем свободные деньги в атрибуты
 
-        List<Expense> expenses = new ArrayList();  // создаем список расходов
+        List<Expense> expenses = new ArrayList<>();  // создаем список расходов
         expenses.add(new Expense("rent", rent));  // добавляем расход
 
         context.setAttribute("expenses", expenses);  // сохраняем список расходов в атрибуты
@@ -33,6 +33,7 @@ public class SummaryServlet extends HttpServlet {
         var context = req.getServletContext();  // загружаем контекст
         context.log("[SummaryServlet] doGet");  // пишем в лог
 
+        req.getRequestDispatcher("/details").include(req, resp); // вызываем servlet DetailsServlet
         resp.getWriter().println("Free money: " + context.getAttribute("freeMoney"));  // вернём свободные деньги
     }
 }
