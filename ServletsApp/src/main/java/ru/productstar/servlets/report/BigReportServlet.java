@@ -15,6 +15,13 @@ import java.io.IOException;
 public class BigReportServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        var session = req.getSession(false);  // Загружаем сессию. Если не передавать false - создаётся новая сессия
+        if (session == null) {  // если нет активной сессии
+            resp.sendRedirect("/login");  // перенаправляем пользователя на страницу LoginServlet
+            return;
+        }
+
         long startTime = System.currentTimeMillis();  // время запуска большого отчёта
 
 //        resp.getWriter().println(new String(new byte[100_000_000]));  // имитация большого отчёта

@@ -15,6 +15,11 @@ public class LoginServlet extends HttpServlet {
     private final String passwd = "123456";
 
     @Override
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.getRequestDispatcher("/index.html").forward(req, resp);  // вызываем страницу LoginServlet
+    }
+
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String password = req.getParameter("password");  // получим пароль из формы, который ввёл пользователь
 

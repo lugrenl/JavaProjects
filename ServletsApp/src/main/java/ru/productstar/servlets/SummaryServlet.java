@@ -5,7 +5,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import ru.productstar.servlets.model.Expense;
+import ru.productstar.servlets.model.Transaction;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -22,10 +22,10 @@ public class SummaryServlet extends HttpServlet {
 
         context.setAttribute("freeMoney", salary - rent);  // сохраняем свободные деньги в атрибуты
 
-        List<Expense> expenses = new ArrayList<>();  // создаем список расходов
-        expenses.add(new Expense("rent", rent));  // добавляем расход
+        List<Transaction> transactions = new ArrayList<>();  // создаем список расходов
+        transactions.add(new Transaction("rent", rent, "expense"));  // добавляем расход
 
-        context.setAttribute("expenses", expenses);  // сохраняем список расходов в атрибуты
+        context.setAttribute("expenses", transactions);  // сохраняем список расходов в атрибуты
     }
 
     @Override
@@ -35,7 +35,7 @@ public class SummaryServlet extends HttpServlet {
 
         var session = req.getSession(false);  // Загружаем сессию. Если не передавать false - создаётся новая сессия
         if (session == null) {  // если нет активной сессии
-            resp.getWriter().println("Not authorized");
+            resp.sendRedirect("/login");  // перенаправляем пользователя на страницу LoginServlet
             return;
         }
 
