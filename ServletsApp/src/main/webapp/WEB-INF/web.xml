@@ -32,7 +32,7 @@
 
     <servlet-mapping>
         <servlet-name>ExpensesServlet</servlet-name>
-        <url-pattern>/expens/add</url-pattern>
+        <url-pattern>/expenses/add</url-pattern>
     </servlet-mapping>
 
     <filter>
@@ -42,7 +42,7 @@
 
     <filter-mapping>
         <filter-name>ExpensesFilter</filter-name>
-        <url-pattern>/expens/add</url-pattern>
+        <url-pattern>/expenses/add</url-pattern>
     </filter-mapping>
 
     <servlet>

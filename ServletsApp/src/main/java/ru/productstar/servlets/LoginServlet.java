@@ -25,7 +25,7 @@ public class LoginServlet extends HttpServlet {
 
         if (password.equals(passwd)) {  // если пароль совпадает
             HttpSession session = req.getSession();  // создаем сессию
-            session.setMaxInactiveInterval(10);  // устанавливаем время жизни сессии в 10 секунд
+            session.setMaxInactiveInterval(10000000);  // устанавливаем время жизни сессии
             resp.sendRedirect("/summary");  // перенаправляем пользователя на страницу SummaryServlet
         } else {  // если пароль не совпадает
             resp.getWriter().println("Wrong password");  // вернём сообщение об ошибке

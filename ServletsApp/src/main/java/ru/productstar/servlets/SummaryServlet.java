@@ -6,12 +6,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.productstar.servlets.model.Transaction;
+import ru.productstar.servlets.model.TransactionType;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
 public class SummaryServlet extends HttpServlet {
+
     @Override
     public void init(ServletConfig config) throws ServletException {
         var context = config.getServletContext();  // загружаем контекст
@@ -22,10 +24,10 @@ public class SummaryServlet extends HttpServlet {
 
         context.setAttribute("freeMoney", salary - rent);  // сохраняем свободные деньги в атрибуты
 
-        List<Transaction> transactions = new ArrayList<>();  // создаем список расходов
-        transactions.add(new Transaction("rent", rent, "expense"));  // добавляем расход
+        List<Transaction> transactions = new ArrayList<>();  // создаем список транзакций
+        transactions.add(new Transaction("rent", rent, TransactionType.EXPENSE));  // добавляем расход
 
-        context.setAttribute("expenses", transactions);  // сохраняем список расходов в атрибуты
+        context.setAttribute("transactions", transactions);  // сохраняем список транзакций в атрибуты
     }
 
     @Override

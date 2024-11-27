@@ -4,6 +4,7 @@ import jakarta.servlet.ServletContextAttributeEvent;
 import jakarta.servlet.ServletContextAttributeListener;
 
 public class LogAttributeChanges implements ServletContextAttributeListener {
+
     @Override
     public void attributeAdded(ServletContextAttributeEvent event) {
         event.getServletContext()  // пишем в лог изменение атрибутов (добавление)

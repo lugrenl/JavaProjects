@@ -5,11 +5,13 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.productstar.servlets.model.Transaction;
+import ru.productstar.servlets.model.TransactionType;
 
 import java.io.IOException;
 import java.util.List;
 
 public class ExpensesServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         var context = req.getServletContext();  // загружаем контекст
@@ -21,20 +23,21 @@ public class ExpensesServlet extends HttpServlet {
             return;
         }
 
-        var expenses = (List<Transaction>) context.getAttribute("expenses");  // загружаем список расходов из атрибутов
+        // загружаем список транзакций из атрибутов
+        var transactions = (List<Transaction>) context.getAttribute("transactions");
 
         int freeMoney = (int) context.getAttribute("freeMoney");  // загружаем свободные деньги из атрибутов
-        resp.getWriter().println("Expenses: " + freeMoney);  // вернём расходы
 
-        // получаем и обрабатываем параметры расходов из реквеста
+        // получаем и обрабатываем параметры расходов из request
         for (var k : req.getParameterMap().keySet()) {
             int value = Integer.parseInt(req.getParameter(k)); // значение расхода из параметров
             freeMoney -= value;  // вычитаем расход из свободных денег
-            expenses.add(new Transaction(k, value, "expense"));  // добавляем расход в список расходов
+            transactions.add(new Transaction(k, value, TransactionType.EXPENSE));  // добавляем расход в список расходов
         }
 
         context.setAttribute("freeMoney", freeMoney);  // сохраняем новое значение свободных денег в контекст
-        context.setAttribute("expenses", expenses);  // сохраняем новый список расходов в контекст
+        context.setAttribute("transactions", transactions);  // сохраняем новый список транзакций в контекст
         resp.getWriter().println("Expenses were added. Free money: " + freeMoney);  // вернём ответ клиенту
+        resp.sendRedirect("/summary");  // перенаправляем пользователя на страницу SummaryServlet
     }
 }

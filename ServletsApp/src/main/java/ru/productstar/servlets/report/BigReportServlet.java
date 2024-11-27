@@ -13,6 +13,7 @@ import java.io.IOException;
 
 @WebServlet(value = "big-report", asyncSupported = true)
 public class BigReportServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
@@ -24,12 +25,11 @@ public class BigReportServlet extends HttpServlet {
 
         long startTime = System.currentTimeMillis();  // время запуска большого отчёта
 
-//        resp.getWriter().println(new String(new byte[100_000_000]));  // имитация большого отчёта
         // реализуем поддержку неблокирующего чтения и записи
         final AsyncContext asyncContext = req.startAsync();  // получаем асинхронный контекст
         ServletOutputStream os = resp.getOutputStream();  // тк нужно записать ответ, его берём из response
         os.setWriteListener(new WriteListener() {  // listener, который будет в асинхронном режиме писать данные
-            byte[] result = new byte[100_000_000];  // имитация большого отчёта
+            final byte[] result = new byte[100_000_000];  // имитация большого отчёта
             int offset = 0;
 
             @Override
@@ -42,7 +42,6 @@ public class BigReportServlet extends HttpServlet {
                     os.write(result, offset, Math.min(1024, result.length - offset));
                     offset += 1024;
                 }
-
             }
 
             @Override
@@ -55,6 +54,5 @@ public class BigReportServlet extends HttpServlet {
         long duration = endTime - startTime;  // вычисляем время работы большого отчёта
         req.getServletContext()  // пишем в лог время работы большого отчёта
                 .log(String.format("[BigReportServlet] Thread %s, %d", Thread.currentThread().getName(), duration));
-
     }
 }

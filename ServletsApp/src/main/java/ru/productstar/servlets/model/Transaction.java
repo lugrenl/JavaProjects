@@ -1,11 +1,18 @@
 package ru.productstar.servlets.model;
 
-public class Transaction {
-    private String name;
-    private int value;
-    private String type;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
-    public Transaction(String name, int value, String type) {
+public final class Transaction {
+
+    @NotEmpty(message = "Transaction name must not be empty")
+    @Size(min = 2, max = 30, message = "Transaction name must be between 2 and 30 characters")
+    private final String name;
+
+    private final int value;
+    private final TransactionType type;
+
+    public Transaction(String name, int value, TransactionType type) {
         this.name = name;
         this.value = value;
         this.type = type;
@@ -19,7 +26,7 @@ public class Transaction {
         return value;
     }
 
-    public String getType() {
+    public TransactionType getType() {
         return type;
     }
 
@@ -28,7 +35,7 @@ public class Transaction {
         return "Transaction{" +
                 "name='" + name + '\'' +
                 ", value=" + value +
-                ", type='" + type + '\'' +
+                ", type=" + type +
                 '}';
     }
 }

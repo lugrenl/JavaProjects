@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.List;
 
 public class DetailsServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         var context = req.getServletContext();  // загружаем контекст
@@ -22,8 +23,9 @@ public class DetailsServlet extends HttpServlet {
         }
 
         resp.getWriter().println("Transactions: ");  // вернём список транзакций в порядке их добавления
-        for (Transaction e : (List<Transaction>) context.getAttribute("expenses")) {  // загружаем список расходов из контекста
-            resp.getWriter().println(String.format("- %s(%d) <- %s", e.getName(), e.getValue(), e.getType())); // вернём расход
+        // загружаем список транзакций из контекста
+        for (Transaction e : (List<Transaction>) context.getAttribute("transactions")) {  // вернём транзакцию
+            resp.getWriter().println(String.format("- %s(%d) <- %s", e.getName(), e.getValue(), e.getType()));
         }
 
         resp.getWriter().println("\n");  // переход на новую строку

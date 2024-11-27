@@ -6,12 +6,14 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import ru.productstar.servlets.model.Transaction;
+import ru.productstar.servlets.model.TransactionType;
 
 import java.io.IOException;
 import java.util.List;
 
 @WebServlet("/incomes/add")
 public class IncomesServlet extends HttpServlet {
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         var context = req.getServletContext();  // загружаем контекст
@@ -23,21 +25,21 @@ public class IncomesServlet extends HttpServlet {
             return;
         }
 
-        var expenses = (List<Transaction>) context.getAttribute("expenses");  // загружаем список расходов из атрибутов
+        // загружаем список транзакций из атрибутов
+        var transactions = (List<Transaction>) context.getAttribute("transactions");
 
         int freeMoney = (int) context.getAttribute("freeMoney");  // загружаем свободные деньги из атрибутов
-        resp.getWriter().println("Incomes: " + freeMoney);  // вернём свободные деньги
 
-        // получаем и обрабатываем параметры расходов из реквеста
+        // получаем и обрабатываем параметры расходов из request
         for (var k : req.getParameterMap().keySet()) {
-            int value = Integer.parseInt(req.getParameter(k)); // значение расхода из параметров
+            int value = Integer.parseInt(req.getParameter(k)); // значение дохода из параметров
             freeMoney += value;  // прибавляем доход к свободным деньгам
-            expenses.add(new Transaction(k, value, "income"));  // добавляем доход в список расходов
+            transactions.add(new Transaction(k, value, TransactionType.INCOME));  // добавляем доход в список транзакций
         }
 
         context.setAttribute("freeMoney", freeMoney);  // сохраняем новое значение свободных денег в контекст
-        context.setAttribute("expenses", expenses);  // сохраняем новый список расходов в контекст
+        context.setAttribute("transactions", transactions);  // сохраняем новый список транзакций в контекст
         resp.getWriter().println("Incomes were added. Free money: " + freeMoney);  // вернём ответ клиенту
-
+        resp.sendRedirect("/summary");  // перенаправляем пользователя на страницу SummaryServlet
     }
 }

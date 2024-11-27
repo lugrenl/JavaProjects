@@ -5,6 +5,7 @@ import jakarta.servlet.*;
 import java.io.IOException;
 
 public class ExpensesFilter implements Filter {
+
     @Override
     public void doFilter(ServletRequest servletRequest,
                          ServletResponse servletResponse,
@@ -15,7 +16,7 @@ public class ExpensesFilter implements Filter {
 
         int freeMoney = (int) context.getAttribute("freeMoney");  // загружаем свободные деньги из атрибутов
 
-        // получаем и обрабатываем параметры расходов из реквеста
+        // получаем и обрабатываем параметры расходов из request
         for (var k : servletRequest.getParameterMap().keySet()) {
             freeMoney -= Integer.parseInt(servletRequest.getParameter(k)); // вычитаем расход из свободных денег
             if (freeMoney < 0) {  // проверяем хватает ли денег
