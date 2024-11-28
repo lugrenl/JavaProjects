@@ -15,7 +15,7 @@ import java.util.List;
 public class SummaryServlet extends HttpServlet {
 
     @Override
-    public void init(ServletConfig config) throws ServletException {
+    public void init(ServletConfig config) {
         var context = config.getServletContext();  // загружаем контекст
         context.log("[SummaryServlet] init");  // пишем в лог
 
@@ -25,7 +25,7 @@ public class SummaryServlet extends HttpServlet {
         context.setAttribute("freeMoney", salary - rent);  // сохраняем свободные деньги в атрибуты
 
         List<Transaction> transactions = new ArrayList<>();  // создаем список транзакций
-        transactions.add(new Transaction("rent", rent, TransactionType.EXPENSE));  // добавляем расход
+        transactions.add(new Transaction("rent", rent, TransactionType.EXPENSE));  // добавляем транзакцию
 
         context.setAttribute("transactions", transactions);  // сохраняем список транзакций в атрибуты
     }

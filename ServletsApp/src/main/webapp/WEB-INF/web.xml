@@ -45,6 +45,16 @@
         <url-pattern>/expenses/add</url-pattern>
     </filter-mapping>
 
+    <filter>
+        <filter-name>IncomesFilter</filter-name>
+        <filter-class>ru.productstar.servlets.filters.IncomesFilter</filter-class>
+    </filter>
+
+    <filter-mapping>
+        <filter-name>IncomesFilter</filter-name>
+        <url-pattern>/incomes/add</url-pattern>
+    </filter-mapping>
+
     <servlet>
         <servlet-name>DetailsServlet</servlet-name>
         <servlet-class>ru.productstar.servlets.DetailsServlet</servlet-class>
@@ -58,5 +68,20 @@
     <listener>
         <listener-class>ru.productstar.servlets.listeners.LogAttributeChanges</listener-class>
     </listener>
+
+    <error-page>
+        <error-code>404</error-code>
+        <location>/errorHandler</location>
+    </error-page>
+
+    <error-page>
+        <error-code>500</error-code>
+        <location>/errorHandler</location>
+    </error-page>
+
+    <error-page>
+        <exception-type>java.lang.Exception</exception-type>
+        <location>/errorHandler</location>
+    </error-page>
 
 </web-app>

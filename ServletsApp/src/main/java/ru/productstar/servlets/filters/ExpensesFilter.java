@@ -18,7 +18,12 @@ public class ExpensesFilter implements Filter {
 
         // получаем и обрабатываем параметры расходов из request
         for (var k : servletRequest.getParameterMap().keySet()) {
-            freeMoney -= Integer.parseInt(servletRequest.getParameter(k)); // вычитаем расход из свободных денег
+            int expense = Integer.parseInt(servletRequest.getParameter(k)); // значение расхода из параметров
+            if (expense < 0) {  // проверяем что расход не отрицательный
+                servletResponse.getWriter().println("Expense can't be negative");
+                return;
+            }
+            freeMoney -= expense; // вычитаем расход из свободных денег
             if (freeMoney < 0) {  // проверяем хватает ли денег
                 servletResponse.getWriter().println("Not enough money");
                 return;
