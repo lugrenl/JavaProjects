@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Моя библиотека</title>
+</head>
+<body>`
+<form method="post" action="/update">
+    <p><input type="hidden" placeholder="Id" name="id" th:value="${book.id}"/></p>
+    <p><input type="text" placeholder="Название" name="title" th:value="${book.title}"/></p>
+    <p><input type="text" placeholder="Автор" name="author" th:value="${book.author}"/></p>
+    <p><input type="text" placeholder="Жанр" name="genre" th:value="${book.genre}"/></p>
+    <p><input type="submit"/></p>
+</form>
+</body>`
+</html>
