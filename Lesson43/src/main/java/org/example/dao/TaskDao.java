@@ -30,7 +30,6 @@ public class TaskDao {
                 Connection connection = dataSource.getConnection();
                 PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
         ) {
-
             statement.setString(1, task.getTitle());
             statement.setBoolean(2, task.getFinished());
             statement.setTimestamp(3, java.sql.Timestamp.valueOf(task.getCreatedDate()));

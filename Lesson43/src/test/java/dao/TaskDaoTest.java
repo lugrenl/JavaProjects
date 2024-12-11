@@ -15,17 +15,29 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import org.postgresql.ds.PGSimpleDataSource;
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class TaskDaoTest {
     private TaskDao taskDao;
 
+//    @BeforeAll
+//    public void setUp() throws IOException {
+//        DataSource dataSource = EmbeddedPostgres
+//                .builder()
+//                .start()
+//                .getPostgresDatabase();
+//
+//        initializeDb(dataSource);
+//        taskDao = new TaskDao(dataSource);
+//    }
+
     @BeforeAll
-    public void setUp() throws IOException {
-        DataSource dataSource = EmbeddedPostgres
-                .builder()
-                .start()
-                .getPostgresDatabase();
+    public void setUp(){
+        PGSimpleDataSource dataSource = new PGSimpleDataSource();
+        dataSource.setDatabaseName("productStar");
+        dataSource.setUser("postgres");
+        dataSource.setPassword("password");
 
         initializeDb(dataSource);
         taskDao = new TaskDao(dataSource);
@@ -45,7 +57,6 @@ class TaskDaoTest {
             ) {
                 statement.executeUpdate(sql);
             }
-
         } catch (IOException | SQLException e) {
             throw new RuntimeException(e);
         }
