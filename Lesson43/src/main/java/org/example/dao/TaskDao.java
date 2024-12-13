@@ -67,7 +67,7 @@ public class TaskDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return -1;
+        throw new RuntimeException("Failed to delete all tasks");
     }
 
     public Task getById(Integer id) {
@@ -81,7 +81,7 @@ public class TaskDao {
             if (resultSet.next()) {
                 return mapToTask(resultSet);
             }
-            return null;
+            throw new RuntimeException("Task with id " + id + " not found");
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -102,9 +102,10 @@ public class TaskDao {
                 PreparedStatement statement = connection.prepareStatement(sql)
         ) {
             statement.setInt(1, numberOfNewestTasks);
-            ResultSet resultSet = statement.executeQuery();
-            while(resultSet.next()) {
-                tasks.add(mapToTask(resultSet));
+            try (ResultSet resultSet = statement.executeQuery()) {
+                while (resultSet.next()) {
+                    tasks.add(mapToTask(resultSet));
+                }
             }
 
         } catch (SQLException e) {
