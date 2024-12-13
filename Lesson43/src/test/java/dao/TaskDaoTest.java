@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import javax.sql.DataSource;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeAll;
@@ -57,14 +58,15 @@ class TaskDaoTest {
             ) {
                 statement.executeUpdate(sql);
             }
-        } catch (IOException | SQLException e) {
+
+        } catch (IOException | SQLException | NullPointerException e) {
             throw new RuntimeException(e);
         }
     }
 
     @Test
     public void testSaveSetsId() {
-        Task task = new Task("test task", false, LocalDateTime.now());
+        Task task = new Task("test task", false, LocalDateTime.now().truncatedTo(ChronoUnit.MICROS));
         taskDao.save(task);
 
         assertThat(task.getId()).isNotNull();
@@ -72,10 +74,10 @@ class TaskDaoTest {
 
     @Test
     public void testFindAllReturnsAllTasks() {
-        Task firstTask = new Task("first task", false, LocalDateTime.now());
+        Task firstTask = new Task("first task", false, LocalDateTime.now().truncatedTo(ChronoUnit.MICROS));
         taskDao.save(firstTask);
 
-        Task secondTask = new Task("second task", false, LocalDateTime.now());
+        Task secondTask = new Task("second task", false, LocalDateTime.now().truncatedTo(ChronoUnit.MICROS));
         taskDao.save(secondTask);
 
         assertThat(taskDao.findAll())
@@ -86,18 +88,18 @@ class TaskDaoTest {
 
     @Test
     public void testDeleteAllDeletesAllRowsInTasks() {
-        Task firstTask = new Task("any task", false, LocalDateTime.now());
+        Task firstTask = new Task("any task", false, LocalDateTime.now().truncatedTo(ChronoUnit.MICROS));
         taskDao.save(firstTask);
 
         int rowsDeleted = taskDao.deleteAll();
-        assertThat(rowsDeleted).isEqualTo(1);
 
+        assertThat(rowsDeleted).isEqualTo(1);
         assertThat(taskDao.findAll()).isEmpty();
     }
 
     @Test
     public void testGetByIdReturnsCorrectTask() {
-        Task task = new Task("test task", false, LocalDateTime.now());
+        Task task = new Task("test task", false, LocalDateTime.now().truncatedTo(ChronoUnit.MICROS));
         taskDao.save(task);
 
         assertThat(taskDao.getById(task.getId()))
@@ -108,27 +110,32 @@ class TaskDaoTest {
 
     @Test
     public void testFindNotFinishedReturnsCorrectTasks()  {
-        Task unfinishedTask = new Task("test task", false, LocalDateTime.now());
+        Task unfinishedTask = new Task("test task", false, LocalDateTime.now().truncatedTo(ChronoUnit.MICROS));
         taskDao.save(unfinishedTask);
 
-        Task finishedTask = new Task("test task", false, LocalDateTime.now());
+        Task finishedTask = new Task("test task", true, LocalDateTime.now().truncatedTo(ChronoUnit.MICROS));
         taskDao.save(finishedTask);
 
         assertThat(taskDao.findAllNotFinished())
                 .singleElement()
                 .extracting("id", "title", "finished", "createdDate")
-                .containsExactly(unfinishedTask.getId(), unfinishedTask.getTitle(), unfinishedTask.getFinished(), unfinishedTask.getCreatedDate());
+                .containsExactly(
+                        unfinishedTask.getId(),
+                        unfinishedTask.getTitle(),
+                        unfinishedTask.getFinished(),
+                        unfinishedTask.getCreatedDate()
+                );
     }
 
     @Test
     public void testFindNewestTasksReturnsCorrectTasks() {
-        Task firstTask = new Task("first task", false, LocalDateTime.now());
+        Task firstTask = new Task("first task", false, LocalDateTime.now().truncatedTo(ChronoUnit.MICROS));
         taskDao.save(firstTask);
 
-        Task secondTask = new Task("second task", false, LocalDateTime.now());
+        Task secondTask = new Task("second task", false, LocalDateTime.now().truncatedTo(ChronoUnit.MICROS));
         taskDao.save(secondTask);
 
-        Task thirdTask = new Task("third task", false, LocalDateTime.now());
+        Task thirdTask = new Task("third task", false, LocalDateTime.now().truncatedTo(ChronoUnit.MICROS));
         taskDao.save(thirdTask);
 
         assertThat(taskDao.findNewestTasks(2))
@@ -139,7 +146,7 @@ class TaskDaoTest {
 
     @Test
     public void testFinishSetsCorrectFlagInDb() {
-        Task task = new Task("test task", false, LocalDateTime.now());
+        Task task = new Task("test task", false, LocalDateTime.now().truncatedTo(ChronoUnit.MICROS));
         taskDao.save(task);
 
         assertThat(taskDao.finishTask(task).getFinished()).isTrue();
@@ -148,10 +155,10 @@ class TaskDaoTest {
 
     @Test
     public void deleteByIdDeletesOnlyNecessaryData() {
-        Task taskToDelete = new Task("first task", false, LocalDateTime.now());
+        Task taskToDelete = new Task("first task", false, LocalDateTime.now().truncatedTo(ChronoUnit.MICROS));
         taskDao.save(taskToDelete);
 
-        Task taskToPreserve = new Task("second task", false, LocalDateTime.now());
+        Task taskToPreserve = new Task("second task", false, LocalDateTime.now().truncatedTo(ChronoUnit.MICROS));
         taskDao.save(taskToPreserve);
 
         taskDao.deleteById(taskToDelete.getId());
