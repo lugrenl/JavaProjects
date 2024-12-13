@@ -77,11 +77,11 @@ public class TaskDao {
                 PreparedStatement statement = connection.prepareStatement(sql)
         ) {
             statement.setInt(1, id);
-            ResultSet resultSet = statement.executeQuery();
-            if (resultSet.next()) {
-                return mapToTask(resultSet);
-            }
-            throw new RuntimeException("Task with id " + id + " not found");
+            try (ResultSet resultSet = statement.executeQuery()) {
+                if (resultSet.next()) {
+                    return mapToTask(resultSet);
+                }
+            } throw new RuntimeException("Task with id " + id + " not found");
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
