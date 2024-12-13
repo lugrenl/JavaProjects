@@ -81,7 +81,7 @@ public class TaskDao {
                 if (resultSet.next()) {
                     return mapToTask(resultSet);
                 }
-            } throw new RuntimeException("Task with id " + id + " not found");
+            } return null;
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
