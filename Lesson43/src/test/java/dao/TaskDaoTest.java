@@ -10,6 +10,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.Objects;
 import javax.sql.DataSource;
 import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeAll;
@@ -50,7 +51,7 @@ class TaskDaoTest {
     }
 
     private void initializeDb(DataSource dataSource) {
-        try(InputStream inputStream = this.getClass().getResource("/initial.sql").openStream()) {
+        try(InputStream inputStream = Objects.requireNonNull(this.getClass().getResource("/initial.sql")).openStream()) {
             String sql = new String(inputStream.readAllBytes());
             try(
                     Connection connection = dataSource.getConnection();
@@ -59,7 +60,7 @@ class TaskDaoTest {
                 statement.executeUpdate(sql);
             }
 
-        } catch (IOException | SQLException | NullPointerException e) {
+        } catch (IOException | SQLException e) {
             throw new RuntimeException(e);
         }
     }
