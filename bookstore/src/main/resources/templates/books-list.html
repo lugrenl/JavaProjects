@@ -11,6 +11,7 @@
         <th>Название</th>
         <th>Автор</th>
         <th>Жанр</th>
+        <th>Количество страниц</th>
         <th></th>
         <th></th>
     </tr>
@@ -18,6 +19,7 @@
         <td th:text="${book.title}"></td>
         <td th:text="${book.author}"></td>
         <td th:text="${book.genre}"></td>
+        <td th:text="${book.pages}"></td>
         <td>
             <a th:href="@{'/edit-form/' + ${book.id}}">Править</a>
         </td>

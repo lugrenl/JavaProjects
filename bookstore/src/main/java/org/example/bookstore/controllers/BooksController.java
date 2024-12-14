@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 
 
 @Controller
-public class BookController {
+public class BooksController {
     @GetMapping("/")
     public String bookList(Model model) {
         model.addAttribute("books", BooksStorage.getBooks());
