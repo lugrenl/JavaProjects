@@ -2,15 +2,20 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Моя библиотека</title>
+    <title>Добавить книгу</title>
 </head>
-<body>
-<form method="post" action="/create">
+<body><h1>Добавить новую книгу:</h1>
+<form method="post" action="/create" th:object="${book}">
     <p><input type="text" placeholder="Название" name="title"/></p>
+    <div style="color:red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title error</div>
     <p><input type="text" placeholder="Автор" name="author"/></p>
+    <div style="color:red" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Author error</div>
     <p><input type="text" placeholder="Жанр" name="genre"/></p>
-    <p><input type="text" placeholder="Количество страниц" name="pages"/></p>
+    <div style="color:red" th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}">Genre error</div>
+    <p><input type="number" placeholder="Количество страниц" name="pages"/></p>
+    <div style="color:red" th:if="${#fields.hasErrors('pages')}" th:errors="*{pages}">Pages error</div>
     <p><input type="submit"/></p>
 </form>
+<a href="/">На главную</a>
 </body>
 </html>

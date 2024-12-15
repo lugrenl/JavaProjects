@@ -2,16 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Моя библиотека</title>
+    <title>Обновить данные книги</title>
 </head>
-<body>
-<form method="post" action="/update">
+<body><h1>Обновить данные книги:</h1>
+<form method="post" action="/update" th:object="${book}">
     <p><input type="hidden" placeholder="Id" name="id" th:value="${book.id}"/></p>
     <p><input type="text" placeholder="Название" name="title" th:value="${book.title}"/></p>
+    <div style="color:red" th:if="${#fields.hasErrors('title')}" th:errors="*{title}">Title error</div>
     <p><input type="text" placeholder="Автор" name="author" th:value="${book.author}"/></p>
+    <div style="color:red" th:if="${#fields.hasErrors('author')}" th:errors="*{author}">Author error</div>
     <p><input type="text" placeholder="Жанр" name="genre" th:value="${book.genre}"/></p>
-    <p><input type="text" placeholder="НКоличество страниц" name="pages" th:value="${book.pages}"/></p>
+    <div style="color:red" th:if="${#fields.hasErrors('genre')}" th:errors="*{genre}">Genre error</div>
+    <p><input type="number" placeholder="Количество страниц" name="pages" th:value="${book.pages}"/></p>
+    <div style="color:red" th:if="${#fields.hasErrors('pages')}" th:errors="*{pages}">Pages error</div>
     <p><input type="submit"/></p>
 </form>
-</body>`
+<a href="/">На главную</a>
+</body>
 </html>

@@ -1,16 +1,21 @@
 package org.example.bookstore.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
 import org.example.bookstore.models.Book;
 import org.example.bookstore.models.BooksStorage;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 
-
 @Controller
 public class BooksController {
+
     @GetMapping("/")
     public String bookList(Model model) {
         model.addAttribute("books", BooksStorage.getBooks());
@@ -18,12 +23,20 @@ public class BooksController {
     }
 
     @GetMapping("/create-form")
-    public String createForm() {
+    public String createForm(@ModelAttribute("book") Book book) {
         return "create-form";
     }
 
+    @GetMapping("/edit-form")
+    public String editForm(@ModelAttribute("book") Book book) {
+        return "edit-form";
+    }
+
     @PostMapping("/create")
-    public String create(Book book) {
+    public String create(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "create-form";
+        }
         BooksStorage.getBooks().add(book);
         return "redirect:/";
     }
@@ -49,7 +62,12 @@ public class BooksController {
     }
 
     @PostMapping("/update")
-    public String update(Book book) {
+    public String update(@ModelAttribute("book") @Valid Book book, BindingResult bindingResult, HttpServletRequest request) {
+        if (bindingResult.hasErrors()) {
+            //String referer = request.getHeader("Referer");
+            //return "redirect:" + referer; // redirect to previous page
+            return "edit-form";
+        }
         delete(book.getId());
         BooksStorage.getBooks().add(book);
         return "redirect:/";
