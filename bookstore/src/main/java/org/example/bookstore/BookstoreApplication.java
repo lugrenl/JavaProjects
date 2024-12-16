@@ -2,6 +2,7 @@ package org.example.bookstore;
 
 import org.example.bookstore.models.Book;
 import org.h2.jdbcx.JdbcDataSource;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -17,12 +18,12 @@ import java.util.Objects;
 public class BookstoreApplication {
 
     @Bean
-    public DataSource h2DataSource() {
-        JdbcDataSource jdbcDataSource = new JdbcDataSource();
-        jdbcDataSource.setUrl("jdbc:h2:./db");
-        jdbcDataSource.setUser("user");
-        jdbcDataSource.setPassword("password");
-        return jdbcDataSource;
+    public DataSource h2DataSource(@Value("${jdbcUrl}") String jdbcUrl) {
+        JdbcDataSource dataSource = new JdbcDataSource();
+        dataSource.setUrl(jdbcUrl);
+        dataSource.setUser("user");
+        dataSource.setPassword("password");
+        return dataSource;
     }
 
     @Bean

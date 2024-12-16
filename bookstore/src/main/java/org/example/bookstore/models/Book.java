@@ -9,6 +9,7 @@ import java.util.UUID;
 @Getter
 @Setter
 public class Book {
+    @NotNull(message = "Id should not be null")
     private String id = UUID.randomUUID().toString();
 
     @NotEmpty(message = "Title should not be empty")
