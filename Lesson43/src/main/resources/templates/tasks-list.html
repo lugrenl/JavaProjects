@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Мои задачи</title>
+</head>
+<body>
+<header><h1>Мои задачи</h1></header>
+<table border="solid">
+    <tr>
+        <th>Название</th>
+        <th>Выполнено</th>
+        <th>Дата создания</th>
+        <th></th>
+        <th></th>
+    </tr>
+    <tr th:each="task:${tasks}">
+        <td th:text="${task.title}"></td>
+        <td th:text="${task.finished}"></td>
+        <td th:text="${#temporals.format(task.getCreatedDate(), 'yyyy-MM-dd HH:mm:ss')}"></td>
+        <td>
+            <a th:href="@{'/delete/' + ${task.id}}">Удалить</a>
+        </td>
+        <td>
+            <a th:href="@{'/finish/' + ${task.id}}">Выполнить</a>
+        </td>
+    </tr>
+</table>
+<a href="/create-form">Добавить задачу</a>
+</body>
+</html>
