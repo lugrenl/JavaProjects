@@ -17,6 +17,16 @@ import javax.sql.DataSource;
 public class TaskDaoImpl implements TaskDao {
     private final DataSource dataSource;
 
+    private static String SAVE_TASK = "INSERT INTO task (title, finished, created_date) VALUES (?, ?, ?)";
+    private static String FIND_ALL_TASK = "SELECT task_id, title, finished, created_date FROM task ORDER BY task_id";
+    private static String UPDATE_TASK = "UPDATE task SET title = ?, finished = ?, created_date = ? WHERE task_id = ?";
+    private static String GET_BY_ID_TASK = "SELECT task_id, title, finished, created_date FROM task WHERE task_id = ?";
+    private static String FIND_ALL_NOT_FINISHED_TASK = "SELECT task_id, title, finished, created_date FROM task WHERE finished = false";
+    private static String FIND_NEWEST_TASK = "SELECT task_id, title, finished, created_date FROM task ORDER BY created_date DESC limit ?";
+    private static String FINISH_TASK = "UPDATE task SET finished = ?";
+    private static String DELETE_ALL_TASK = "DELETE FROM task";
+    private static String DELETE_BY_ID_TASK = "DELETE FROM task WHERE task_id = ?";
+
     @Autowired
     public TaskDaoImpl(DataSource dataSource) {
         this.dataSource = dataSource;
@@ -32,21 +42,11 @@ public class TaskDaoImpl implements TaskDao {
         get id
         set id
         */
-        String sql = "INSERT INTO task (title, finished, created_date) VALUES (?, ?, ?)";
         try(
                 Connection connection = dataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)
+                PreparedStatement statement = connection.prepareStatement(SAVE_TASK, Statement.RETURN_GENERATED_KEYS)
         ) {
-            statement.setString(1, task.getTitle());
-            statement.setBoolean(2, task.getFinished());
-            statement.setTimestamp(3, java.sql.Timestamp.valueOf(task.getCreatedDate()));
-            statement.executeUpdate();
-
-            try(ResultSet resultSet = statement.getGeneratedKeys()) {
-                if (resultSet.next()) {
-                    task.setId(resultSet.getInt(1));
-                }
-            }
+            mapToSql(task, statement);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -57,17 +57,15 @@ public class TaskDaoImpl implements TaskDao {
     @Override
     public List<Task> findAll() {
         List<Task> tasks = new ArrayList<>();
-        String sql = "SELECT task_id, title, finished, created_date FROM task ORDER BY task_id";
-        return getTasks(tasks, sql);
+        return getTasks(tasks, FIND_ALL_TASK);
     }
 
     @Override
     public int deleteAll() {
-        String sql = "DELETE FROM task";
         try (
                 Connection connection = dataSource.getConnection();
                 Statement statement = connection.createStatement()) {
-            return statement.executeUpdate(sql);
+            return statement.executeUpdate(DELETE_ALL_TASK);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -76,10 +74,9 @@ public class TaskDaoImpl implements TaskDao {
 
     @Override
     public Task getById(Integer id) {
-        String sql = "SELECT task_id, title, finished, created_date FROM task WHERE task_id = ?";
         try(
                 Connection connection = dataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql)
+                PreparedStatement statement = connection.prepareStatement(GET_BY_ID_TASK)
         ) {
             statement.setInt(1, id);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -96,17 +93,15 @@ public class TaskDaoImpl implements TaskDao {
     @Override
     public List<Task> findAllNotFinished() {
         List<Task> tasks = new ArrayList<>();
-        String sql = "SELECT task_id, title, finished, created_date FROM task WHERE finished = false";
-        return getTasks(tasks, sql);
+        return getTasks(tasks, FIND_ALL_NOT_FINISHED_TASK);
     }
 
     @Override
     public List<Task> findNewestTasks(Integer numberOfNewestTasks) {
         List<Task> tasks = new ArrayList<>();
-        String sql = "SELECT task_id, title, finished, created_date FROM task ORDER BY created_date DESC limit ?";
         try(
                 Connection connection = dataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql)
+                PreparedStatement statement = connection.prepareStatement(FIND_NEWEST_TASK)
         ) {
             statement.setInt(1, numberOfNewestTasks);
             try (ResultSet resultSet = statement.executeQuery()) {
@@ -123,10 +118,9 @@ public class TaskDaoImpl implements TaskDao {
 
     @Override
     public Task finishTask(Task task) {
-        String sql = "UPDATE task SET finished = true WHERE task_id = ?";
         try(
                 Connection connection = dataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql)
+                PreparedStatement statement = connection.prepareStatement(FINISH_TASK)
         ) {
             statement.setInt(1, task.getId());
             statement.executeUpdate();
@@ -140,10 +134,9 @@ public class TaskDaoImpl implements TaskDao {
 
     @Override
     public void deleteById(Integer id) {
-        String sql = "DELETE FROM task WHERE task_id = ?";
         try(
                 Connection connection = dataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql)
+                PreparedStatement statement = connection.prepareStatement(DELETE_BY_ID_TASK)
         ) {
             statement.setInt(1, id);
             statement.executeUpdate();
@@ -155,35 +148,16 @@ public class TaskDaoImpl implements TaskDao {
 
     @Override
     public Task update(Task task) {
-        String sql = "UPDATE task SET title = ?, finished = ?, created_date = ? WHERE task_id = ?";
         try(
                 Connection connection = dataSource.getConnection();
-                PreparedStatement statement = connection.prepareStatement(sql)
+                PreparedStatement statement = connection.prepareStatement(UPDATE_TASK)
         ) {
-            statement.setString(1, task.getTitle());
-            statement.setBoolean(2, task.getFinished());
-            statement.setTimestamp(3, java.sql.Timestamp.valueOf(task.getCreatedDate()));
             statement.setInt(4, task.getId());
-            statement.executeUpdate();
-            try (ResultSet resultSet = statement.getGeneratedKeys()) {
-                if (resultSet.next()) {
-                    task.setId(resultSet.getInt(1));
-                }
-            }
+            mapToSql(task, statement);
 
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        return task;
-        }
-
-    private Task mapToTask(ResultSet resultSet) throws SQLException {
-        Task task = new Task(
-                resultSet.getString(2),
-                resultSet.getBoolean(3)
-        );
-        task.setId(resultSet.getInt(1));
-        task.setCreatedDate(resultSet.getTimestamp(4).toLocalDateTime());
         return task;
     }
 
@@ -201,5 +175,27 @@ public class TaskDaoImpl implements TaskDao {
             throw new RuntimeException(e);
         }
         return tasks;
+    }
+
+    private void mapToSql(Task task, PreparedStatement statement) throws SQLException {
+        statement.setString(1, task.getTitle());
+        statement.setBoolean(2, task.getFinished());
+        statement.setTimestamp(3, java.sql.Timestamp.valueOf(task.getCreatedDate()));
+        statement.executeUpdate();
+        try (ResultSet resultSet = statement.getGeneratedKeys()) {
+            if (resultSet.next()) {
+                task.setId(resultSet.getInt(1));
+            }
+        }
+    }
+
+    private Task mapToTask(ResultSet resultSet) throws SQLException {
+        Task task = new Task(
+                resultSet.getString(2),
+                resultSet.getBoolean(3)
+        );
+        task.setId(resultSet.getInt(1));
+        task.setCreatedDate(resultSet.getTimestamp(4).toLocalDateTime());
+        return task;
     }
 }
