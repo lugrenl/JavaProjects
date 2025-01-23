@@ -1,7 +1,9 @@
 package org.example.model;
 
+import java.util.Objects;
+
 public class Contact {
-    private final long id;
+    private long id;
     private String name;
     private String surname;
     private String phoneNumber;
@@ -15,8 +17,19 @@ public class Contact {
         this.email = email;
     }
 
+    public Contact(String name, String surname, String phoneNumber, String email) {
+        this.name = name;
+        this.surname = surname;
+        this.phoneNumber = phoneNumber;
+        this.email = email;
+    }
+
     public long getId() {
         return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -49,6 +62,21 @@ public class Contact {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Contact contact = (Contact) o;
+        return Objects.equals(id, contact.id) && Objects.equals(name, contact.name) &&
+                Objects.equals(surname, contact.surname) && Objects.equals(phoneNumber, contact.phoneNumber) &&
+                Objects.equals(email, contact.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, surname, phoneNumber,email);
     }
 
     @Override

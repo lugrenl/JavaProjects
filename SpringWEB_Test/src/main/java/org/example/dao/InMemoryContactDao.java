@@ -22,6 +22,11 @@ public class InMemoryContactDao implements ContactDao {
     }
 
     @Override
+    public long addContact(Contact contact) {
+        return 0;
+    }
+
+    @Override
     public Optional<Contact> findContact(long contactId) {
         return Optional.ofNullable(contactIdMap.get(contactId));
     }
@@ -44,5 +49,20 @@ public class InMemoryContactDao implements ContactDao {
     @Override
     public List<Contact> getAllContacts() {
         return contactIdMap.values().stream().toList();
+    }
+
+    @Override
+    public void updatePhoneNumber(long contactId, String phoneNumber) {
+
+    }
+
+    @Override
+    public void updateEmail(long contactId, String email) {
+
+    }
+
+    @Override
+    public void deleteContact(long contactId) {
+
     }
 }

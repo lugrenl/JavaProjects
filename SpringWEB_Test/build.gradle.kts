@@ -12,9 +12,21 @@ repositories {
 dependencies {
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-web
     implementation("org.springframework.boot:spring-boot-starter-web:3.3.5")
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jdbc
+    implementation("org.springframework.boot:spring-boot-starter-data-jdbc:3.4.1")
+    // https://mvnrepository.com/artifact/org.postgresql/postgresql
+    implementation("org.postgresql:postgresql:42.7.5")
+
+
 
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
+    // https://mvnrepository.com/artifact/org.assertj/assertj-core
+    testImplementation("org.assertj:assertj-core:3.27.3")
+    // https://mvnrepository.com/artifact/org.springframework/spring-test
+    testImplementation("org.springframework:spring-test:6.2.2")
+
+
 }
 
 tasks.test {
