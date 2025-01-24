@@ -1,5 +1,6 @@
 package org.example.dao;
 
+import org.example.exceptions.ContactNotFoundException;
 import org.example.model.Contact;
 import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.RowMapper;
@@ -50,6 +51,7 @@ public class JdbcContactDao implements ContactDao {
 
     @Override
     public Contact updateContact(long contactId, String name, String surname, String email, String phoneNumber) {
+        KeyHolder keyHolder = new GeneratedKeyHolder();
         var args = new MapSqlParameterSource()
                 .addValue("id", contactId)
                 .addValue("name", name)
@@ -57,13 +59,12 @@ public class JdbcContactDao implements ContactDao {
                 .addValue("email", email)
                 .addValue("phoneNumber", phoneNumber);
 
-        namedJdbcTemplate.update(UPDATE_CONTACT, args);
+        namedJdbcTemplate.update(UPDATE_CONTACT, args, keyHolder, new String[] { "id" });
 
-        Contact contact = getContact(contactId);
-        if (contact == null) {
-            throw new RuntimeException("Contact not found");
+        if (keyHolder.getKey() == null) {
+            throw new ContactNotFoundException("Contact not found: " + contactId);
         }
-        return contact;
+        return getContact(contactId);
     }
 
     @Override
@@ -81,8 +82,10 @@ public class JdbcContactDao implements ContactDao {
 
     @Override
     public Contact addContactReturnContact(String name, String surname, String email, String phoneNumber) {
-        long contactId = addContact(new Contact(name, surname, email, phoneNumber));
-        return getContact(contactId);
+        Contact contact = new Contact(name, surname, email, phoneNumber);
+        long contactId = addContact(contact);
+        contact.setId(contactId);
+        return contact;
     }
 
     @Override
