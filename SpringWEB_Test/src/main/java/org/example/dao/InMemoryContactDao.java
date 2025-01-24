@@ -15,7 +15,7 @@ public class InMemoryContactDao implements ContactDao {
     }
 
     @Override
-    public Contact addContact(String name, String surname, String phoneNumber, String email) {
+    public Contact addContactReturnContact(String name, String surname, String phoneNumber, String email) {
         Contact contact = new Contact(contactId, name, surname, phoneNumber, email);
         contactIdMap.put(contactId++, contact);
         return contact;
@@ -23,17 +23,13 @@ public class InMemoryContactDao implements ContactDao {
 
     @Override
     public long addContact(Contact contact) {
-        return 0;
-    }
-
-    @Override
-    public Optional<Contact> findContact(long contactId) {
-        return Optional.ofNullable(contactIdMap.get(contactId));
+        contactIdMap.put(contactId++, contact);
+        return contact.getId();
     }
 
     @Override
     public Contact getContact(long contactId) {
-        return findContact(contactId).orElseThrow(() -> new IllegalArgumentException("Contact not found" + contactId));
+        return Optional.ofNullable(contactIdMap.get(contactId)).orElseThrow(() -> new IllegalArgumentException("Contact not found" + contactId));
     }
 
     @Override
@@ -53,16 +49,18 @@ public class InMemoryContactDao implements ContactDao {
 
     @Override
     public void updatePhoneNumber(long contactId, String phoneNumber) {
-
+        Contact contact = getContact(contactId);
+        contact.setPhoneNumber(phoneNumber);
     }
 
     @Override
     public void updateEmail(long contactId, String email) {
-
+        Contact contact = getContact(contactId);
+        contact.setEmail(email);
     }
 
     @Override
     public void deleteContact(long contactId) {
-
+        contactIdMap.remove(contactId);
     }
 }

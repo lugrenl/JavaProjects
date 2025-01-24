@@ -17,11 +17,13 @@ public class ContactController {
     }
 
     @PostMapping
-    public ContactDto addContact(@RequestParam("name") String name,
-                                    @RequestParam("surname") String surname,
-                                    @RequestParam("phoneNumber") String phoneNumber,
-                                    @RequestParam("email") String email) {
-        return contactFacade.addContact(name, surname, phoneNumber, email);
+    public ContactDto addContact(
+            @RequestParam("name") String name,
+            @RequestParam("surname") String surname,
+            @RequestParam("email") String email,
+            @RequestParam("phoneNumber") String phoneNumber
+    ) {
+        return contactFacade.addContact(name, surname, email, phoneNumber);
     }
 
     @GetMapping("/{contactId}")
@@ -30,17 +32,37 @@ public class ContactController {
     }
 
     @GetMapping
-    public List<ContactDto> getAllContacts() {
-        return contactFacade.getAllContacts();
-    }
+    public List<ContactDto> getAllContacts() { return contactFacade.getAllContacts(); }
 
-    @PutMapping("/{contactId}/{name}/{surname}/{phoneNumber}/{email}")
+    @PutMapping("/{contactId}/{name}/{surname}/{email}/{phoneNumber}")
     public ContactDto updateContact(
             @PathVariable("contactId") long contactId,
             @PathVariable("name") String name,
             @PathVariable("surname") String surname,
-            @PathVariable("phoneNumber") String phoneNumber,
-            @PathVariable("email") String email) {
-        return contactFacade.updateContact(contactId, name, surname, phoneNumber, email);
+            @PathVariable("email") String email,
+            @PathVariable("phoneNumber") String phoneNumber
+    ) {
+        return contactFacade.updateContact(contactId, name, surname, email, phoneNumber);
+    }
+
+    @PutMapping("/email/{contactId}/{email}")
+    public void updateEmail(
+            @PathVariable("contactId") long contactId,
+            @PathVariable("email") String email
+    ) {
+        contactFacade.updateEmail(contactId, email);
+    }
+
+    @PutMapping("/phone/{contactId}/{phoneNumber}")
+    public void updatePhoneNumber(
+            @PathVariable("contactId") long contactId,
+            @PathVariable("phoneNumber") String phoneNumber
+    ) {
+        contactFacade.updatePhoneNumber(contactId, phoneNumber);
+    }
+
+    @DeleteMapping("/delete/{contactId}")
+    public void deleteContact(@PathVariable("contactId") long contactId) {
+        contactFacade.deleteContact(contactId);
     }
 }

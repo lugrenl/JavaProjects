@@ -16,8 +16,8 @@ public class ContactFacade {
         this.contactDao = contactDao;
     }
 
-    public ContactDto addContact(String name, String surname, String phoneNumber, String email) {
-        return new ContactDto(contactDao.addContact(name, surname, phoneNumber, email));
+    public ContactDto addContact(String name, String surname, String email, String phoneNumber) {
+        return new ContactDto(contactDao.addContactReturnContact(name, surname, email, phoneNumber));
     }
 
     public ContactDto getContact(long contactId) {
@@ -28,7 +28,19 @@ public class ContactFacade {
         return contactDao.getAllContacts().stream().map(ContactDto::new).toList();
     }
 
-    public ContactDto updateContact(long contactId, String name, String surname, String phoneNumber, String email) {
-        return new ContactDto(contactDao.updateContact(contactId, name, surname, phoneNumber, email));
+    public ContactDto updateContact(long contactId, String name, String surname, String email, String phoneNumber) {
+        return new ContactDto(contactDao.updateContact(contactId, name, surname, email, phoneNumber));
+    }
+
+    public void updateEmail(long contactId, String email) {
+        contactDao.updateEmail(contactId, email);
+    }
+
+    public void updatePhoneNumber(long contactId, String phoneNumber) {
+        contactDao.updatePhoneNumber(contactId, phoneNumber);
+    }
+
+    public void deleteContact(long contactId) {
+        contactDao.deleteContact(contactId);
     }
 }

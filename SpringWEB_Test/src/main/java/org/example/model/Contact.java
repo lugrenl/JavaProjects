@@ -6,22 +6,22 @@ public class Contact {
     private long id;
     private String name;
     private String surname;
-    private String phoneNumber;
     private String email;
+    private String phoneNumber;
 
-    public Contact(long id, String name, String surname, String phoneNumber, String email) {
+    public Contact(long id, String name, String surname, String email, String phoneNumber) {
         this.id = id;
         this.name = name;
         this.surname = surname;
-        this.phoneNumber = phoneNumber;
         this.email = email;
+        this.phoneNumber = phoneNumber;
     }
 
-    public Contact(String name, String surname, String phoneNumber, String email) {
+    public Contact(String name, String surname, String email, String phoneNumber) {
         this.name = name;
         this.surname = surname;
-        this.phoneNumber = phoneNumber;
         this.email = email;
+        this.phoneNumber = phoneNumber;
     }
 
     public long getId() {
@@ -48,14 +48,6 @@ public class Contact {
         this.surname = surname;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
     public String getEmail() {
         return email;
     }
@@ -64,29 +56,37 @@ public class Contact {
         this.email = email;
     }
 
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Contact contact = (Contact) o;
         return Objects.equals(id, contact.id) && Objects.equals(name, contact.name) &&
-                Objects.equals(surname, contact.surname) && Objects.equals(phoneNumber, contact.phoneNumber) &&
-                Objects.equals(email, contact.email);
+                Objects.equals(surname, contact.surname) && Objects.equals(email, contact.email) &&
+                Objects.equals(phoneNumber, contact.phoneNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, surname, phoneNumber,email);
+        return Objects.hash(id, name, surname,email, phoneNumber);
     }
 
     @Override
     public String toString() {
         return "Contact{" +
                 "id=" + id +
-                ", name='" + name +
-                ", surname='" + surname +
-                ", phoneNumber='" + phoneNumber +
-                ", email='" + email  +
+                ", name='" + name + '\'' +
+                ", surname='" + surname + '\'' +
+                ", email='" + email + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
                 '}';
     }
 }

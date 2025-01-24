@@ -11,17 +11,17 @@ public class ContactDto {
     private final String name;
     @JsonProperty("surname")
     private final String surname;
-    @JsonProperty("phoneNumber")
-    private final String phoneNumber;
     @JsonProperty("email")
     private final String email;
+    @JsonProperty("phoneNumber")
+    private final String phoneNumber;
 
     public ContactDto(Contact contact) {
         this.contactId = contact.getId();
         this.name = contact.getName();
         this.surname = contact.getSurname();
-        this.phoneNumber = contact.getPhoneNumber();
         this.email = contact.getEmail();
+        this.phoneNumber = contact.getPhoneNumber();
     }
 
     public long getContactId() {
@@ -36,11 +36,11 @@ public class ContactDto {
         return surname;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
     public String getEmail() {
         return email;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 }

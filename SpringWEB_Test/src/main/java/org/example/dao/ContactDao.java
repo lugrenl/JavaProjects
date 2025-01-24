@@ -3,14 +3,12 @@ package org.example.dao;
 import org.example.model.Contact;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface ContactDao {
-    Contact addContact(String name, String surname, String phoneNumber, String email);
+    Contact addContactReturnContact(String name, String surname, String email, String phoneNumber);
     long addContact(Contact contact);
-    Optional <Contact> findContact(long contactId);
     Contact getContact(long contactId);
-    Contact updateContact(long contactId, String name, String surname, String phoneNumber, String email);
+    Contact updateContact(long contactId, String name, String surname, String email, String phoneNumber);
     List<Contact> getAllContacts();
     void updatePhoneNumber(long contactId, String phoneNumber);
     void updateEmail(long contactId, String email);
