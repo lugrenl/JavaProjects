@@ -62,7 +62,8 @@ public class ContactController {
     }
 
     @DeleteMapping("/delete/{contactId}")
-    public void deleteContact(@PathVariable("contactId") long contactId) {
-        contactFacade.deleteContact(contactId);
-    }
+    public void deleteContact(@PathVariable("contactId") long contactId) { contactFacade.deleteContact(contactId); }
+
+    @PostMapping("/import")
+    public void saveAll (@RequestParam("filePath") String filePath) { contactFacade.saveAll(filePath); }
 }

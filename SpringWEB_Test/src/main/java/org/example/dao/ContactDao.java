@@ -2,6 +2,7 @@ package org.example.dao;
 
 import org.example.model.Contact;
 
+import java.util.Collection;
 import java.util.List;
 
 public interface ContactDao {
@@ -13,4 +14,5 @@ public interface ContactDao {
     void updatePhoneNumber(long contactId, String phoneNumber);
     void updateEmail(long contactId, String email);
     void deleteContact(long contactId);
+    void saveAll(Collection<Contact> contacts);
 }

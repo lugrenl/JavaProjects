@@ -17,10 +17,10 @@ import java.util.List;
 
 /**
  * Unit tests for {@link JdbcContactDao}.
- *
+ * <p>
  * Аннотация @Sql подтягивает SQL-скрипт contact.sql, который будет применен к базе перед выполнением теста.
  * Contact.sql создает таблицу CONTACT с полями (ID, NAME, SURNAME, EMAIL, PHONE_NUMBER) и вставляет в нее 2 записи.
- *
+ * <p>
  * Тесты проверяют корректность реализации ContactDao.
  */
 @ExtendWith(SpringExtension.class)

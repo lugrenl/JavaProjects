@@ -63,4 +63,9 @@ public class InMemoryContactDao implements ContactDao {
     public void deleteContact(long contactId) {
         contactIdMap.remove(contactId);
     }
+
+    @Override
+    public void saveAll(Collection<Contact> contacts) {
+        contacts.forEach(this::addContact);
+    }
 }

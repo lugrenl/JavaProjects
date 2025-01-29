@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
@@ -70,11 +71,7 @@ public class JdbcContactDao implements ContactDao {
     @Override
     public long addContact(Contact contact) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
-        var args = new MapSqlParameterSource()
-                .addValue("name", contact.getName())
-                .addValue("surname", contact.getSurname())
-                .addValue("email", contact.getEmail())
-                .addValue("phoneNumber", contact.getPhoneNumber());
+         var args = contactToArgs(contact);
 
         namedJdbcTemplate.update(SAVE_CONTACT, args, keyHolder, new String[] { "id" });
         return Objects.requireNonNull(keyHolder.getKey()).longValue();
@@ -101,5 +98,20 @@ public class JdbcContactDao implements ContactDao {
     @Override
     public void deleteContact(long contactId) {
         namedJdbcTemplate.update(DELETE_CONTACT, new MapSqlParameterSource("id", contactId));
+    }
+
+    @Override
+    public void saveAll(Collection<Contact> contacts) {
+        var args = contacts.stream().map(JdbcContactDao::contactToArgs).toArray(MapSqlParameterSource[]::new);
+        namedJdbcTemplate.batchUpdate(SAVE_CONTACT, args);
+
+    }
+
+    private static MapSqlParameterSource contactToArgs(Contact contact) {
+        return new MapSqlParameterSource()
+                .addValue("name", contact.getName())
+                .addValue("surname", contact.getSurname())
+                .addValue("email", contact.getEmail())
+                .addValue("phoneNumber", contact.getPhoneNumber());
     }
 }
