@@ -10,14 +10,12 @@ public class InMemoryContactDao implements ContactDao {
     private long contactId = 1L;
     private final Map<Long, Contact> contactIdMap;
 
-    public InMemoryContactDao() {
-        this.contactIdMap = new HashMap<>();
-    }
+    public InMemoryContactDao() { this.contactIdMap = new HashMap<>(); }
 
     @Override
     public Contact addContactReturnContact(String name, String surname, String phoneNumber, String email) {
         Contact contact = new Contact(contactId, name, surname, phoneNumber, email);
-        contactIdMap.put(contactId++, contact);
+        addContact(contact);
         return contact;
     }
 

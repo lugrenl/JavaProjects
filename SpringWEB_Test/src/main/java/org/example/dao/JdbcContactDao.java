@@ -2,7 +2,6 @@ package org.example.dao;
 
 import org.example.exceptions.ContactNotFoundException;
 import org.example.model.Contact;
-import org.springframework.context.annotation.Primary;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
@@ -14,7 +13,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Objects;
 
-@Primary
 @Repository
 public class JdbcContactDao implements ContactDao {
 
@@ -36,9 +34,7 @@ public class JdbcContactDao implements ContactDao {
 
     private final NamedParameterJdbcTemplate namedJdbcTemplate;
 
-    public JdbcContactDao(NamedParameterJdbcTemplate namedJdbcTemplate) {
-        this.namedJdbcTemplate = namedJdbcTemplate;
-    }
+    public JdbcContactDao(NamedParameterJdbcTemplate namedJdbcTemplate) { this.namedJdbcTemplate = namedJdbcTemplate; }
 
     @Override
     public List<Contact> getAllContacts() {

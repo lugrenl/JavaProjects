@@ -1,13 +1,31 @@
 package org.example.model;
 
+import jakarta.persistence.*;
+
 import java.util.Objects;
 
+@Entity
+@Table(name = "contact")
 public class Contact {
+
+    @Id
+    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
+    @Column(name = "id")
     private long id;
+
+    @Column(name = "name")
     private String name;
+
+    @Column(name = "surname")
     private String surname;
+
+    @Column(name = "email")
     private String email;
+
+    @Column(name = "phone_number")
     private String phoneNumber;
+
+    public Contact() { }
 
     public Contact(long id, String name, String surname, String email, String phoneNumber) {
         this.id = id;
