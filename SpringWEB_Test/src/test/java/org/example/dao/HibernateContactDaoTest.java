@@ -1,7 +1,6 @@
 package org.example.dao;
 
 import org.example.config.ContactsManagerConfig;
-import org.example.config.HibernateConfig;
 import org.example.model.Contact;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,21 +58,18 @@ public record HibernateContactDaoTest(@Autowired ContactDao contactDao) {
         contact.setId(contactId);
 
         var contactInDb = contactDao.getContact(contactId);
-
         assertThat(contactInDb).isEqualTo(contact);
     }
 
     @Test
     void getContact() {
         var contact = contactDao.getContact(IVAN.getId());
-
         assertThat(contact).isEqualTo(IVAN);
     }
 
     @Test
     void getAllContacts() {
         var contacts = contactDao.getAllContacts();
-
         assertThat(contacts).containsAll(PERSISTED_CONTACTS);
     }
 
@@ -110,5 +106,19 @@ public record HibernateContactDaoTest(@Autowired ContactDao contactDao) {
 
         var deletedContact = contactDao.getContact(contactId);
         assertThat(deletedContact).isNull();
+    }
+
+    @Test
+    void updateContact() {
+        var contact = new Contact("Name", "Surname", "email", "phonenumber");
+        var contactId = contactDao.addContact(contact);
+
+        var newName = "NewName";
+        var newSurname = "NewSurname";
+        var newEmail = "newemail";
+        var newPhoneNumber = "newphonenumber";
+
+        var updatedContact = contactDao.updateContact(contactId, newName, newSurname, newEmail, newPhoneNumber);
+        assertThat(updatedContact).isEqualTo(new Contact(contactId, newName, newSurname, newEmail, newPhoneNumber));
     }
 }

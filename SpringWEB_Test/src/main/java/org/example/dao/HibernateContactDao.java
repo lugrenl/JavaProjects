@@ -6,7 +6,6 @@ import org.hibernate.SessionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Collection;
 import java.util.List;
@@ -22,7 +21,6 @@ public class HibernateContactDao implements ContactDao {
     }
 
     @Override
-    @Transactional
     public Contact addContactReturnContact(String name, String surname, String email, String phoneNumber) {
         Contact contact = new Contact(name, surname, email, phoneNumber);
         addContact(contact);
@@ -30,11 +28,12 @@ public class HibernateContactDao implements ContactDao {
     }
 
     @Override
-    @Transactional
     public long addContact(Contact contact) {
         try(var session = sessionFactory.openSession()) {
-            session.persist(contact);
-            return contact.getId();
+            var transaction = session.beginTransaction();
+            long contactId = (Long) session.save(contact);
+            transaction.commit();
+            return contactId;
         }
     }
 
@@ -46,9 +45,9 @@ public class HibernateContactDao implements ContactDao {
     }
 
     @Override
-    @Transactional
     public Contact updateContact(long contactId, String name, String surname, String email, String phoneNumber) {
         try(var session = sessionFactory.openSession()) {
+            var transaction = session.beginTransaction();
             var contact = session.get(Contact.class, contactId);
             if (contact != null) {
                 contact.setName(name);
@@ -58,6 +57,7 @@ public class HibernateContactDao implements ContactDao {
             } else {
                 throw new ContactNotFoundException("Contact not found: " + contactId);
             }
+            transaction.commit();
             return contact;
         }
     }
@@ -70,49 +70,53 @@ public class HibernateContactDao implements ContactDao {
     }
 
     @Override
-    @Transactional
     public void updatePhoneNumber(long contactId, String phoneNumber) {
         try(var session = sessionFactory.openSession()) {
+            var transaction = session.beginTransaction();
             var contact = session.get(Contact.class, contactId);
             if (contact != null) {
                 contact.setPhoneNumber(phoneNumber);
             } else {
                 throw new ContactNotFoundException("Contact not found: " + contactId);
             }
+            transaction.commit();
         }
     }
 
     @Override
-    @Transactional
     public void updateEmail(long contactId, String email) {
         try(var session = sessionFactory.openSession()) {
+            var transaction = session.beginTransaction();
             var contact = session.get(Contact.class, contactId);
             if (contact != null) {
                 contact.setEmail(email);
             } else {
                 throw new ContactNotFoundException("Contact not found: " + contactId);
             }
+            transaction.commit();
         }
     }
 
     @Override
-    @Transactional
     public void deleteContact(long contactId) {
         try(var session = sessionFactory.openSession()) {
+            var transaction = session.beginTransaction();
             var contact = session.get(Contact.class, contactId);
             if (contact != null) {
                 session.remove(contact);
             } else {
                 throw new ContactNotFoundException("Contact not found: " + contactId);
             }
+            transaction.commit();
         }
     }
 
     @Override
-    @Transactional
     public void saveAll(Collection<Contact> contacts) {
         try(var session = sessionFactory.openSession()) {
-            contacts.forEach(session::persist);
+            var transaction = session.beginTransaction();
+            contacts.forEach(session::save);
+            transaction.commit();
         }
     }
 }
