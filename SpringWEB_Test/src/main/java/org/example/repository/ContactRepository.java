@@ -1,6 +1,5 @@
 package org.example.repository;
 
-import jakarta.annotation.Nonnull;
 import org.example.model.Contact;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -9,21 +8,8 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Optional;
-
 @Repository
 public interface ContactRepository extends JpaRepository<Contact, Long> {
-
-    @Nonnull
-    Contact save(Contact contact);
-
-    Optional<Contact> findById(long contactId);
-
-    void deleteById(long contactId);
-
-    @Nonnull
-    List<Contact> findAll();
 
     @Transactional
     @Modifying
