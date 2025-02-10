@@ -1,11 +1,11 @@
 package org.example.dao;
 
 import org.example.model.Contact;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
 import java.util.*;
 
-@Repository
+@Component
 public class InMemoryContactDao implements ContactDao {
     private long contactId = 1L;
     private final Map<Long, Contact> contactIdMap;
