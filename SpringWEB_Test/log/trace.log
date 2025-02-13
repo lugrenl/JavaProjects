@@ -1,0 +1,8 @@
+2025-02-13 14:38:55 TRACE [main] o.h.type.spi.TypeConfiguration$Scope - Handling #sessionFactoryCreated from [org.hibernate.internal.SessionFactoryImpl@5c7e55a4] for TypeConfiguration
+2025-02-13 14:38:56 TRACE [main] o.h.type.spi.TypeConfiguration$Scope - Handling #sessionFactoryCreated from [org.hibernate.internal.SessionFactoryImpl@27aa7294] for TypeConfiguration
+2025-02-13 14:39:21 TRACE [SpringApplicationShutdownHook] o.h.type.spi.TypeConfiguration$Scope - Handling #sessionFactoryClosed from [org.hibernate.internal.SessionFactoryImpl@27aa7294] for TypeConfiguration
+2025-02-13 14:39:21 TRACE [SpringApplicationShutdownHook] o.h.type.spi.TypeConfiguration$Scope - Handling #sessionFactoryClosed from [org.hibernate.internal.SessionFactoryImpl@5c7e55a4] for TypeConfiguration
+2025-02-13 14:39:41 TRACE [Test worker] o.h.type.spi.TypeConfiguration$Scope - Handling #sessionFactoryCreated from [org.hibernate.internal.SessionFactoryImpl@511a307e] for TypeConfiguration
+2025-02-13 14:39:42 TRACE [Test worker] o.h.type.spi.TypeConfiguration$Scope - Handling #sessionFactoryCreated from [org.hibernate.internal.SessionFactoryImpl@47ab3688] for TypeConfiguration
+2025-02-13 14:39:44 TRACE [SpringContextShutdownHook] o.h.type.spi.TypeConfiguration$Scope - Handling #sessionFactoryClosed from [org.hibernate.internal.SessionFactoryImpl@47ab3688] for TypeConfiguration
+2025-02-13 14:39:44 TRACE [SpringContextShutdownHook] o.h.type.spi.TypeConfiguration$Scope - Handling #sessionFactoryClosed from [org.hibernate.internal.SessionFactoryImpl@511a307e] for TypeConfiguration

@@ -24,6 +24,8 @@ dependencies {
     implementation("org.springframework:spring-orm:6.2.2")
     // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-data-jpa
     implementation("org.springframework.boot:spring-boot-starter-data-jpa:3.4.2")
+    // https://mvnrepository.com/artifact/ch.qos.logback/logback-classic
+    testImplementation("ch.qos.logback:logback-classic:1.5.16")
 
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")
@@ -31,6 +33,13 @@ dependencies {
     testImplementation("org.assertj:assertj-core:3.27.3")
     // https://mvnrepository.com/artifact/org.springframework/spring-test
     testImplementation("org.springframework:spring-test:6.2.2")
+
+    //Other Dependencies >>
+    //LOMBOK Dependencies
+    annotationProcessor("org.projectlombok:lombok:1.18.36")
+    compileOnly("org.projectlombok:lombok:1.18.36")
+    testAnnotationProcessor("org.projectlombok:lombok:1.18.36")
+    testCompileOnly("org.projectlombok:lombok:1.18.36")
 }
 
 tasks.test {
