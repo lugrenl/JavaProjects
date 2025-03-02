@@ -2,6 +2,7 @@ package com.project.mockitobasics.dao;
 
 import com.project.mockitobasics.exceptions.TaskNotFoundException;
 import com.project.mockitobasics.model.Task;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Component;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 
+@Slf4j
 @Component
 public class NamedJdbcDao implements TaskDao {
 

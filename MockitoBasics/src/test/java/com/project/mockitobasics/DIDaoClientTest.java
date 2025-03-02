@@ -5,14 +5,18 @@ import com.project.mockitobasics.model.Task;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest(properties = {"jdbcUrl=jdbc:h2:mem:db;DB_CLOSE_DELAY=-1"})
-class TaskDaoImplTest {
+@ActiveProfiles("test")
+@SpringBootTest
+public class DIDaoClientTest {
 
     @Autowired
+    @Qualifier("taskDaoTestImpl")
     private TaskDao taskDao;
 
     @BeforeEach
@@ -23,7 +27,6 @@ class TaskDaoImplTest {
     @Test
     public void testSaveSetsId() {
         Task task = new Task("test task", false);
-        System.out.println(task);
         taskDao.save(task);
 
         assertThat(task.getId()).isNotNull();
@@ -94,7 +97,7 @@ class TaskDaoImplTest {
 
         Task thirdTask = new Task("third task", false);
         taskDao.save(thirdTask);
-        
+
         assertThat(taskDao.findNewestTasks(2))
                 .hasSize(2)
                 .extracting("id")
