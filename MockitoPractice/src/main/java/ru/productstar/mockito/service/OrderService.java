@@ -38,7 +38,6 @@ public class OrderService {
             throw new ProductNotFoundException(productName);
         }
 
-
         Delivery delivery = new Delivery(
                 productRepository.getByName(productName),
                 wh,

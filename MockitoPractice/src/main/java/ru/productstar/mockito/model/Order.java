@@ -19,7 +19,7 @@ public class Order {
 
     public long addDelivery(Delivery delivery) {
         deliveries.add(delivery);
-        total = total + delivery.getPrice() * delivery.getCount();
+        total = total + (long) delivery.getPrice() * delivery.getCount();
         return total;
     }
 

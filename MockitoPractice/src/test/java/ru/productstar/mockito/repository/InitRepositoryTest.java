@@ -13,7 +13,7 @@ public class InitRepositoryTest {
 
     @Test
     public void mockInitTest() {
-        try (MockedStatic mock = mockStatic(InitRepository.class)) {
+        try (MockedStatic<InitRepository> mock = mockStatic(InitRepository.class)) {
             assertNull(InitRepository.getInstance());
 
             mock.when(InitRepository::getInstance).thenCallRealMethod();
@@ -23,7 +23,7 @@ public class InitRepositoryTest {
 
     @Test
     public void mockDeepInitTest() {
-        try (MockedStatic mock = mockStatic(InitRepository.class, RETURNS_DEEP_STUBS)) {
+        try (MockedStatic<InitRepository> mock = mockStatic(InitRepository.class, RETURNS_DEEP_STUBS)) {
             when(InitRepository.getInstance().getCustomerRepository().size()).thenReturn(5);
 
             assertEquals(5, InitRepository.getInstance().getCustomerRepository().size());
