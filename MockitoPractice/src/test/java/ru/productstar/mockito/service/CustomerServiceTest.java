@@ -1,9 +1,9 @@
 package ru.productstar.mockito.service;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
-import org.mockito.InOrder;
+import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.productstar.mockito.model.Customer;
 import ru.productstar.mockito.repository.CustomerRepository;
@@ -15,6 +15,17 @@ import static org.mockito.Mockito.*;
 @ExtendWith(MockitoExtension.class)
 public class CustomerServiceTest {
 
+    @Mock
+    private CustomerRepository cr;
+
+    @InjectMocks
+    private CustomerService cs;
+
+    @BeforeEach
+    public void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
     /**
      * Тест 1 - Получение покупателя "Ivan"
      * Проверки:
@@ -22,14 +33,23 @@ public class CustomerServiceTest {
      */
     @Test
     public void GetByNameTest() {
-        CustomerRepository cr = spy(CustomerRepository.class);
-        CustomerService cs = new CustomerService(cr);
-        cs.getOrCreate("Ivan");
+        // Подготовка
+        Customer expectedCustomer = new Customer("Ivan");
+        when(cr.getByName("Ivan")).thenReturn(expectedCustomer);
+        when(cr.size()).thenReturn(3);
 
-        verify(cr, times(1)).getByName("Ivan");
-        verify(cr, never()).add(any(Customer.class));
+        // Действие
+        Customer actualCustomer = cs.getOrCreate("Ivan");
+
+        // Проверка
+        assertEquals(expectedCustomer, actualCustomer);
         assertEquals(3, cr.size());
 
+        // Количество вызовов
+        verify(cr, times(1)).getByName("Ivan");
+        verify(cr, never()).add(any(Customer.class));
+
+        // Очерёдность вызовов
         InOrder inOrder = inOrder(cr);
         inOrder.verify(cr).getByName("Ivan");
         inOrder.verify(cr).size();
@@ -43,21 +63,30 @@ public class CustomerServiceTest {
      */
     @Test
     public void GetOrCreateTest() {
-        CustomerRepository cr = mock(CustomerRepository.class);
-        CustomerService cs = new CustomerService(cr);
-        cs.getOrCreate("Oleg");
+        // Подготовка
+        Customer newCustomer = new Customer("Oleg");
+        when(cr.getByName("Oleg")).thenReturn(null);
+        when(cr.add(any(Customer.class))).thenReturn(newCustomer);
+        when(cr.size()).thenReturn(1);
 
+        // Действие
+        Customer actualCustomer = cs.getOrCreate("Oleg");
+
+        // Проверка
+        assertEquals(newCustomer, actualCustomer);
+        assertEquals(1, cr.size());
+
+        // Количество вызовов
         verify(cr, times(1)).getByName("Oleg");
         verify(cr, times(1)).add(any(Customer.class));
 
-        when(cr.size()).thenReturn(1);
-        assertEquals(1, cr.size());
-
+        // Очерёдность вызовов
         InOrder inOrder = inOrder(cr);
         inOrder.verify(cr).getByName("Oleg");
         inOrder.verify(cr).add(any(Customer.class));
         inOrder.verify(cr).size();
 
+        // Захват аргумента
         ArgumentCaptor<Customer> customerArgumentCaptor = ArgumentCaptor.forClass(Customer.class);
         verify(cr, times(1)).add(customerArgumentCaptor.capture());
         Customer customer = customerArgumentCaptor.getValue();
