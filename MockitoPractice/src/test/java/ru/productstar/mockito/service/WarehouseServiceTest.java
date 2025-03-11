@@ -156,7 +156,7 @@ public class WarehouseServiceTest {
         Warehouse wh = warehouseService.findClosestWarehouse("phone", 2);
 
         // Проверка
-        assertEquals("Warehouse3", wh.getName());
+        assertEquals("Warehouse3", wh.getName()); // склад с наименьшим расстоянием
 
         // Количество вызовов
         verify(warehouseRepository, times(1)).all();
