@@ -43,7 +43,8 @@ public class WarehouseServiceTest {
         warehouses = Arrays.asList(
                 createWarehouse("Warehouse0", 30, new Stock(phone, 400, 5)),
                 createWarehouse("Warehouse1", 20, new Stock(laptop, 900, 3)),
-                createWarehouse("Warehouse2", 5, new Stock(keyboard, 40, 10))
+                createWarehouse("Warehouse2", 5, new Stock(keyboard, 40, 10)),
+                createWarehouse("Warehouse3", 10, new Stock(phone, 380, 2))
         );
     }
 
@@ -55,22 +56,25 @@ public class WarehouseServiceTest {
         return warehouse;
     }
 
-    /**
-     * Покрыть тестами методы findWarehouse и findClosestWarehouse.
-     * Вызывать реальные методы зависимых сервисов и репозиториев нельзя.
-     * Поиск должен осуществляться как минимум на трех складах.
-     * <p>
-     * Должны быть проверены следующие сценарии:
-     * - поиск несуществующего товара
-     * - поиск существующего товара с достаточным количеством
-     * - поиск существующего товара с недостаточным количеством
-     * <p>
-     * Проверки:
-     * - товар находится на нужном складе, учитывается количество и расстояние до него
-     * - корректная работа для несуществующего товара
-     * - порядок и количество вызовов зависимых сервисов
+    /*
+      Покрыть тестами методы findWarehouse и findClosestWarehouse.
+      Вызывать реальные методы зависимых сервисов и репозиториев нельзя.
+      Поиск должен осуществляться как минимум на трех складах.
+      <p>
+      Должны быть проверены следующие сценарии:
+      - поиск несуществующего товара
+      - поиск существующего товара с достаточным количеством
+      - поиск существующего товара с недостаточным количеством
+      <p>
+      Проверки:
+      - товар находится на нужном складе, учитывается количество и расстояние до него
+      - корректная работа для несуществующего товара
+      - порядок и количество вызовов зависимых сервисов
      */
 
+    /**
+     * Поиск несуществующего товара
+     */
     @Test
     public void FindWarehouseNoneExistingProductTest() {
         // Подготовка
@@ -86,6 +90,9 @@ public class WarehouseServiceTest {
         verify(warehouseRepository, times(1)).all();
     }
 
+    /**
+     * Поиск существующего товара с достаточным количеством
+     */
     @Test
     public void FindWarehouseExistingProductEnoughQuantityTest() {
         // Подготовка
@@ -101,6 +108,9 @@ public class WarehouseServiceTest {
         verify(warehouseRepository, times(1)).all();
     }
 
+    /**
+     * Поиск существующего товара с недостаточным количеством
+     */
     @Test
     public void FindWarehouseExistingProductNotEnoughQuantityTest() {
         // Подготовка
@@ -116,6 +126,9 @@ public class WarehouseServiceTest {
         verify(warehouseRepository, times(1)).all();
     }
 
+    /**
+     * Поиск ближайшего склада с несуществующим товаром
+     */
     @Test
     public void FindClosestWarehouseNoneExistingProductTest() {
         // Подготовка
@@ -131,6 +144,9 @@ public class WarehouseServiceTest {
         verify(warehouseRepository, times(1)).all();
     }
 
+    /**
+     * Поиск ближайшего склада с существующим товаром с достаточным количеством
+     */
     @Test
     public void FindClosestWarehouseExistingProductEnoughQuantityTest() {
         // Подготовка
@@ -140,12 +156,15 @@ public class WarehouseServiceTest {
         Warehouse wh = warehouseService.findClosestWarehouse("phone", 2);
 
         // Проверка
-        assertEquals("Warehouse0", wh.getName());
+        assertEquals("Warehouse3", wh.getName());
 
         // Количество вызовов
         verify(warehouseRepository, times(1)).all();
     }
 
+    /**
+     * Поиск ближайшего склада с существующим товаром с недостаточным количеством
+     */
     @Test
     public void FindClosestWarehouseExistingProductNotEnoughQuantityTest() {
         // Подготовка
