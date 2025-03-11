@@ -6,8 +6,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.productstar.mockito.ProductNotFoundException;
-import ru.productstar.mockito.model.Customer;
-import ru.productstar.mockito.model.Order;
+import ru.productstar.mockito.model.*;
 import ru.productstar.mockito.repository.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -33,9 +32,17 @@ public class OrderServiceTest {
     @InjectMocks
     private OrderService orderService;
 
+    private Order order;
+    private Product product;
+    private Warehouse warehouse;
+
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+
+        order = new Order(new Customer("test_client"));
+        product = new Product("test_product");
+        warehouse = new Warehouse("test_warehouse", 10);
     }
 
     /**
@@ -54,4 +61,85 @@ public class OrderServiceTest {
      * - порядок и количество вызовов зависимых сервисов
      * - факт выбрасывания ProductNotFoundException
      */
+
+    @Test
+    public void CreateOrderForExistingCustomerTest() {
+        // Подготовка
+        Customer expectedCustomer = new Customer("Ivan");
+        Order expectedOrder = new Order(expectedCustomer);
+        when(customerService.getOrCreate("Ivan")).thenReturn(expectedCustomer);
+        when(orderRepository.create(any(Customer.class))).thenReturn(expectedOrder);
+
+        // Действие
+        Order createdOrder = orderService.create("Ivan");
+
+        // Проверка
+        assertEquals(expectedOrder, createdOrder);
+
+        // Количество вызовов
+        verify(customerService, times(1)).getOrCreate("Ivan");
+        verify(orderRepository, times(1)).create(expectedCustomer);
+
+        // Очерёдность вызовов
+        InOrder inOrder = inOrder(customerService, orderRepository);
+        inOrder.verify(customerService).getOrCreate("Ivan");
+        inOrder.verify(orderRepository).create(expectedCustomer);
+    }
+
+    @Test
+    public void CreateOrderForNewCustomerTest() {
+        // Подготовка
+        Customer newCustomer = new Customer("Oleg");
+        Order expectedOrder = new Order(newCustomer);
+        when(customerService.getOrCreate("Oleg")).thenReturn(newCustomer);
+        when(orderRepository.create(any(Customer.class))).thenReturn(expectedOrder);
+
+        // Действие
+        Order createdOrder = orderService.create("Oleg");
+
+        // Проверка
+        assertEquals(expectedOrder, createdOrder);
+
+        // Количество вызовов
+        verify(customerService, times(1)).getOrCreate("Oleg");
+        verify(orderRepository, times(1)).create(newCustomer);
+
+        // Очерёдность вызовов
+        InOrder inOrder = inOrder(customerService, orderRepository);
+        inOrder.verify(customerService).getOrCreate("Oleg");
+        inOrder.verify(orderRepository).create(newCustomer);
+    }
+
+    @Test
+    public void AddExistingProductTest() throws ProductNotFoundException {
+        // Подготовка
+        String productName = "test_product";
+        int count = 3;
+        boolean fastestDelivery = false;
+        Stock stock = new Stock(product, 50, 10);
+
+        when(warehouseService.findWarehouse(productName, count)).thenReturn(warehouse);
+        when(productRepository.getByName(productName)).thenReturn(product);
+        when(warehouseService.getStock(warehouse, productName)).thenReturn(stock);
+        when(orderRepository.addDelivery(anyInt(), any(Delivery.class))).thenReturn(order);
+
+        // Действие
+        Order updatedOrder = orderService.addProduct(order, productName, count, fastestDelivery);
+
+        // Проверка
+        assertEquals(order, updatedOrder);
+
+        // Количество вызовов
+        verify(warehouseService, times(1)).findWarehouse(productName, count);
+        verify(productRepository, times(1)).getByName(productName);
+        verify(warehouseService, times(1)).getStock(warehouse, productName);
+        verify(orderRepository, times(1)).addDelivery(anyInt(), any(Delivery.class));
+
+        // Очерёдность вызовов
+        InOrder inOrder = inOrder(warehouseService, productRepository, warehouseService, orderRepository);
+        inOrder.verify(warehouseService).findWarehouse(productName, count);
+        inOrder.verify(productRepository).getByName(productName);
+        inOrder.verify(warehouseService).getStock(warehouse, productName);
+        inOrder.verify(orderRepository).addDelivery(anyInt(), any(Delivery.class));
+    }
 }

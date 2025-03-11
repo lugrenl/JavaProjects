@@ -10,7 +10,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import ru.productstar.mockito.model.Product;
 import ru.productstar.mockito.model.Stock;
 import ru.productstar.mockito.model.Warehouse;
-import ru.productstar.mockito.repository.InitRepository;
 import ru.productstar.mockito.repository.WarehouseRepository;
 
 import java.util.Arrays;
