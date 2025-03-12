@@ -32,18 +32,25 @@ public class OrderServiceTest {
     @InjectMocks
     private OrderService orderService;
 
-    private Order order;
-    private Product product;
-    private Warehouse warehouse;
-
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
+    }
 
-        // Подготовка данных
-        order = new Order(new Customer("test_client"));
-        product = new Product("test_product");
-        warehouse = new Warehouse("test_warehouse", 10);
+    private Customer createCustomer(String name) {
+        return new Customer(name);
+    }
+
+    private Order createOrder(String clientName) {
+        return new Order(createCustomer(clientName));
+    }
+
+    private Product createProduct(String name) {
+        return new Product(name);
+    }
+
+    private Warehouse createWarehouse(String name, int distance) {
+        return new Warehouse(name, distance);
     }
 
     /*
@@ -69,24 +76,25 @@ public class OrderServiceTest {
     @Test
     public void CreateOrderForExistingCustomerTest() {
         // Подготовка
-        Customer expectedCustomer = new Customer("Ivan");
-        Order expectedOrder = new Order(expectedCustomer);
-        when(customerService.getOrCreate("Ivan")).thenReturn(expectedCustomer);
+        String clientName = "Ivan";
+        Customer expectedCustomer = createCustomer(clientName);
+        Order expectedOrder = createOrder(clientName);
+        when(customerService.getOrCreate(clientName)).thenReturn(expectedCustomer);
         when(orderRepository.create(any(Customer.class))).thenReturn(expectedOrder);
 
         // Действие
-        Order createdOrder = orderService.create("Ivan");
+        Order createdOrder = orderService.create(clientName);
 
         // Проверка
         assertEquals(expectedOrder, createdOrder);
 
         // Количество вызовов
-        verify(customerService, times(1)).getOrCreate("Ivan");
+        verify(customerService, times(1)).getOrCreate(clientName);
         verify(orderRepository, times(1)).create(expectedCustomer);
 
         // Очерёдность вызовов
         InOrder inOrder = inOrder(customerService, orderRepository);
-        inOrder.verify(customerService).getOrCreate("Ivan");
+        inOrder.verify(customerService).getOrCreate(clientName);
         inOrder.verify(orderRepository).create(expectedCustomer);
     }
 
@@ -96,24 +104,25 @@ public class OrderServiceTest {
     @Test
     public void CreateOrderForNewCustomerTest() {
         // Подготовка
-        Customer newCustomer = new Customer("Oleg");
-        Order expectedOrder = new Order(newCustomer);
-        when(customerService.getOrCreate("Oleg")).thenReturn(newCustomer);
+        String clientName = "Oleg";
+        Customer newCustomer = createCustomer(clientName);
+        Order expectedOrder = createOrder(clientName);
+        when(customerService.getOrCreate(clientName)).thenReturn(newCustomer);
         when(orderRepository.create(any(Customer.class))).thenReturn(expectedOrder);
 
         // Действие
-        Order createdOrder = orderService.create("Oleg");
+        Order createdOrder = orderService.create(clientName);
 
         // Проверка
         assertEquals(expectedOrder, createdOrder);
 
         // Количество вызовов
-        verify(customerService, times(1)).getOrCreate("Oleg");
+        verify(customerService, times(1)).getOrCreate(clientName);
         verify(orderRepository, times(1)).create(newCustomer);
 
         // Очерёдность вызовов
         InOrder inOrder = inOrder(customerService, orderRepository);
-        inOrder.verify(customerService).getOrCreate("Oleg");
+        inOrder.verify(customerService).getOrCreate(clientName);
         inOrder.verify(orderRepository).create(newCustomer);
     }
 
@@ -126,6 +135,9 @@ public class OrderServiceTest {
         String productName = "test_product";
         int count = 5;
         boolean fastestDelivery = false;
+        Product product = createProduct(productName);
+        Warehouse warehouse = createWarehouse("test_warehouse", 10);
+        Order order = createOrder("test_client");
         Stock stock = new Stock(product, 50, 10);
 
         when(warehouseService.findWarehouse(productName, count)).thenReturn(warehouse);
@@ -162,6 +174,7 @@ public class OrderServiceTest {
         String productName = "test_product";
         int count = 15;
         boolean fastestDelivery = false;
+        Order order = createOrder("test_client");
 
         when(warehouseService.findWarehouse(productName, count)).thenReturn(null);
 
@@ -182,6 +195,7 @@ public class OrderServiceTest {
         String productName = "nonexistent_product";
         int count = 3;
         boolean fastestDelivery = false;
+        Order order = createOrder("test_client");
 
         when(warehouseService.findWarehouse(productName, count)).thenReturn(null);
 
@@ -203,6 +217,9 @@ public class OrderServiceTest {
         String productName = "test_product";
         int count = 5;
         boolean fastestDelivery = true;
+        Product product = createProduct(productName);
+        Warehouse warehouse = createWarehouse("test_warehouse", 10);
+        Order order = createOrder("test_client");
         Stock stock = new Stock(product, 50, 10);
 
         when(warehouseService.findClosestWarehouse(productName, count)).thenReturn(warehouse);
