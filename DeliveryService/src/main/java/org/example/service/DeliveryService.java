@@ -24,7 +24,7 @@ public class DeliveryService {
         Double subTotalCost = distanceCost + sizeCost + fragileCost;
         Double totalCost = subTotalCost * workLoad.getRatio();
 
-        totalCost = Math.round(totalCost * 100.0) / 100.0;
+        totalCost = Math.round(totalCost * 100.0) / 100.0; // округляем копейки
 
         return Math.max(totalCost, MINIMUM_COST);
     }
@@ -40,7 +40,7 @@ public class DeliveryService {
             throw new DistanceNotValidException("Distance must be more than 0");
         }
         if (fragile == Fragile.FRAGILE && distance > MAXIMUM_FRAGILE_DISTANCE) {
-            throw new MaximumFragileDistanceException("Maximum distance for fragile cargo is 30 km");
+            throw new MaximumFragileDistanceException(String.format("Maximum fragile distance is %s", MAXIMUM_FRAGILE_DISTANCE));
         }
     }
 
