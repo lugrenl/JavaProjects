@@ -7,7 +7,9 @@ import org.example.service.DeliveryService;
 
 public class Main {
     public static void main(String[] args) {
-        Double deliveryCost = DeliveryService.CalculateDeliveryCost(
+        DeliveryService deliveryService = new DeliveryService();
+
+        Double deliveryCost = deliveryService.calculateDeliveryCost(
                 100.0,
                 Size.SMALL,
                 Fragile.NOT_FRAGILE,

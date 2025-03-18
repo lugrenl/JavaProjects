@@ -10,12 +10,12 @@ import org.example.exceptions.MaximumFragileDistanceException;
 
 public class DeliveryService {
 
-    private static final Double MINIMUM_COST = 100.0; // минимальная стоимость доставки
+    private static final Double MINIMUM_COST = 400.0; // минимальная стоимость доставки
     private static final Double MAXIMUM_FRAGILE_DISTANCE = 30.0; // максимальное расстояние доставки для хрупкого груза
 
-    public static Double CalculateDeliveryCost(Double distance, Size size, Fragile fragile, WorkLoad workLoad) {
+    public Double calculateDeliveryCost(Double distance, Size size, Fragile fragile, WorkLoad workLoad) {
         validateData(distance, size, fragile, workLoad);
-        validateData(distance, fragile);
+        validateDistance(distance, fragile);
 
         Double distanceCost = distanceCost(distance);
         Double sizeCost = sizeCost(size);
@@ -29,13 +29,13 @@ public class DeliveryService {
         return Math.max(totalCost, MINIMUM_COST);
     }
 
-    private static void validateData(Double distance, Size size, Fragile fragile, WorkLoad workLoad) {
+    private void validateData(Double distance, Size size, Fragile fragile, WorkLoad workLoad) {
         if (distance == null || size == null || fragile == null || workLoad == null) {
             throw new ArgumentIsNullException("All parameters must be not null");
         }
     }
 
-    private static void validateData(Double distance, Fragile fragile) {
+    private void validateDistance(Double distance, Fragile fragile) {
         if (distance <= 0){
             throw new DistanceNotValidException("Distance must be more than 0");
         }
@@ -44,7 +44,7 @@ public class DeliveryService {
         }
     }
 
-    private static Double distanceCost(Double distance) {
+    private Double distanceCost(Double distance) {
         if (distance > 30) {
             return Distance.OVER_30KM.getPrice();
         } else if (distance > 10) {
@@ -56,7 +56,7 @@ public class DeliveryService {
         }
     }
 
-    private static Double sizeCost(Size size) {
+    private Double sizeCost(Size size) {
         if (size == Size.LARGE) {
             return Size.LARGE.getPrice();
         } else {
@@ -64,18 +64,11 @@ public class DeliveryService {
         }
     }
 
-    private static Double fragileCost(Fragile fragile) {
+    private Double fragileCost(Fragile fragile) {
         if (fragile == Fragile.FRAGILE) {
             return Fragile.FRAGILE.getPrice();
         } else {
             return Fragile.NOT_FRAGILE.getPrice();
         }
     }
-
-
-
-
-
-
-
 }
