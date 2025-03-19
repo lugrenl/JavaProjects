@@ -34,7 +34,7 @@ class DeliveryServiceTest {
         @ParameterizedTest
         @DisplayName("Проверка входных данных на null")
         @Tag("NullArguments")
-        @MethodSource("org.example.service.DeliveryServiceTest#nullParametersProvider")
+        @MethodSource("org.example.service.DeliveryServiceTest#validateDataTestProvider")
         void validateDataTest(Double distance, Size size, Fragile fragile, WorkLoad workLoad) {
             ArgumentIsNullException exception = assertThrows(
                     ArgumentIsNullException.class, () -> deliveryService.calculateDeliveryCost(distance, size, fragile, workLoad)
@@ -125,29 +125,22 @@ class DeliveryServiceTest {
                 "30.0, SMALL, NOT_FRAGILE, HEAVY, 420.0",      // Высокая загрузка -> (200 + 100 + 0) * 1.4
                 "30.0, SMALL, NOT_FRAGILE, VERY_HEAVY, 480.0"  // Очень высокая загрузка -> (200 + 100 + 0) * 1.6
         })
-        void shouldCalculateLoadCost(Double distance, Size size, Fragile fragile, WorkLoad workLoad, Double expected) {
+        void CalculateWorkLoadCostTest(Double distance, Size size, Fragile fragile, WorkLoad workLoad, Double expected) {
             assertEquals(expected, deliveryService.calculateDeliveryCost(distance, size, fragile, workLoad),
                     "Неверная стоимость для уровня нагрузки: " + workLoad);
         }
-    }
-
-    @Nested
-    @DisplayName("Комплексные тесты")
-    @Tag("ComplexTests")
-    class ComplexTests {
 
         @ParameterizedTest
-        @DisplayName("Различные случай расчёта стоимости доставки")
-        @Tag("ComplexCases")
-        @MethodSource("org.example.service.DeliveryServiceTest#complexTestProvider")
-        void shouldCalculateComplexCases(Double distance, Size size, Fragile fragile, WorkLoad workLoad, Double expected) {
+        @DisplayName("Граничные случаи дистанции для расчёта стоимости доставки")
+        @Tag("BoarderCasesDistanceCost")
+        @MethodSource("org.example.service.DeliveryServiceTest#boardDistanceTestProvider")
+        void CalculateBoarderDistanceCasesTest(Double distance, Size size, Fragile fragile, WorkLoad workLoad, Double expected) {
             assertEquals(expected, deliveryService.calculateDeliveryCost(distance, size, fragile, workLoad),
-                    "Неверная стоимость для определённого случая");
+                    "Неверная стоимость для граничного случая");
         }
     }
 
-    // Test data providers
-    private static Stream<Arguments> nullParametersProvider() {
+    private static Stream<Arguments> validateDataTestProvider() {
         return Stream.of(
                 Arguments.of(null, Size.SMALL, Fragile.NOT_FRAGILE, WorkLoad.HEAVY),
                 Arguments.of(12.0, null, Fragile.NOT_FRAGILE, WorkLoad.HEAVY),
@@ -156,18 +149,16 @@ class DeliveryServiceTest {
         );
     }
 
-    private static Stream<Arguments> complexTestProvider() {
+    private static Stream<Arguments> boardDistanceTestProvider() {
         return Stream.of(
                 // (50 + 100 + 0) * 1.6
-                Arguments.of(1.0, Size.SMALL, Fragile.NOT_FRAGILE, WorkLoad.VERY_HEAVY, 400.0),
+                Arguments.of(2.0, Size.SMALL, Fragile.NOT_FRAGILE, WorkLoad.VERY_HEAVY, 400.0),
                 // (100 + 200 + 300) * 1.4
-                Arguments.of(5.0, Size.LARGE,Fragile.FRAGILE, WorkLoad.HEAVY, 840.0),
+                Arguments.of(10.0, Size.LARGE,Fragile.FRAGILE, WorkLoad.HEAVY, 840.0),
                 // (200 + 200 + 300) * 1.2
-                Arguments.of(15.0, Size.LARGE, Fragile.FRAGILE, WorkLoad.INTENSE, 840.0),
+                Arguments.of(30.0, Size.LARGE, Fragile.FRAGILE, WorkLoad.INTENSE, 840.0),
                 // (300 + 200 + 0) * 1.0
-                Arguments.of(35.0, Size.LARGE, Fragile.NOT_FRAGILE, WorkLoad.NORMAL, 500.0),
-                // (300 + 100 + 0) * 1.6
-                Arguments.of(60.0, Size.SMALL, Fragile.NOT_FRAGILE, WorkLoad.VERY_HEAVY, 640.0)
+                Arguments.of(31.0, Size.LARGE, Fragile.NOT_FRAGILE, WorkLoad.NORMAL, 500.0)
         );
     }
 }
