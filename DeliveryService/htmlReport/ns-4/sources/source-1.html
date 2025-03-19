@@ -1,0 +1,190 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > DeliveryService</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example.service</a>
+</div>
+
+<h1>Coverage Summary for Class: DeliveryService (org.example.service)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Branch, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">DeliveryService</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (24/24)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (31/31)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.service;
+&nbsp;
+&nbsp;import org.example.enums.Distance;
+&nbsp;import org.example.enums.Fragile;
+&nbsp;import org.example.enums.Size;
+&nbsp;import org.example.enums.WorkLoad;
+&nbsp;import org.example.exceptions.ArgumentIsNullException;
+&nbsp;import org.example.exceptions.DistanceNotValidException;
+&nbsp;import org.example.exceptions.MaximumFragileDistanceException;
+&nbsp;
+<b class="fc">&nbsp;public class DeliveryService {</b>
+&nbsp;
+<b class="fc">&nbsp;    private static final Double MINIMUM_COST = 400.0; // минимальная стоимость доставки</b>
+<b class="fc">&nbsp;    private static final Double MAXIMUM_FRAGILE_DISTANCE = 30.0; // максимальное расстояние доставки для хрупкого груза</b>
+&nbsp;
+&nbsp;    public Double calculateDeliveryCost(Double distance, Size size, Fragile fragile, WorkLoad workLoad) {
+<b class="fc">&nbsp;        validateData(distance, size, fragile, workLoad);</b>
+<b class="fc">&nbsp;        validateDistance(distance, fragile);</b>
+&nbsp;
+<b class="fc">&nbsp;        Double distanceCost = distanceCost(distance);</b>
+<b class="fc">&nbsp;        Double sizeCost = sizeCost(size);</b>
+<b class="fc">&nbsp;        Double fragileCost = fragileCost(fragile);</b>
+&nbsp;
+<b class="fc">&nbsp;        Double subTotalCost = distanceCost + sizeCost + fragileCost;</b>
+<b class="fc">&nbsp;        Double totalCost = subTotalCost * workLoad.getRatio();</b>
+&nbsp;
+<b class="fc">&nbsp;        totalCost = Math.round(totalCost * 100.0) / 100.0; // округляем копейки</b>
+&nbsp;
+<b class="fc">&nbsp;        return Math.max(totalCost, MINIMUM_COST);</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    private void validateData(Double distance, Size size, Fragile fragile, WorkLoad workLoad) {
+<b class="fc">&nbsp;        if (distance == null || size == null || fragile == null || workLoad == null) {</b>
+<b class="fc">&nbsp;            throw new ArgumentIsNullException(&quot;All parameters must be not null&quot;);</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private void validateDistance(Double distance, Fragile fragile) {
+<b class="fc">&nbsp;        if (distance &lt;= 0){</b>
+<b class="fc">&nbsp;            throw new DistanceNotValidException(&quot;Distance must be more than 0&quot;);</b>
+&nbsp;        }
+<b class="fc">&nbsp;        if (fragile == Fragile.FRAGILE &amp;&amp; distance &gt; MAXIMUM_FRAGILE_DISTANCE) {</b>
+<b class="fc">&nbsp;            throw new MaximumFragileDistanceException(String.format(&quot;Maximum fragile distance is %s&quot;, MAXIMUM_FRAGILE_DISTANCE));</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private Double distanceCost(Double distance) {
+<b class="fc">&nbsp;        if (distance &gt; 30) {</b>
+<b class="fc">&nbsp;            return Distance.OVER_30KM.getPrice();</b>
+<b class="fc">&nbsp;        } else if (distance &gt; 10) {</b>
+<b class="fc">&nbsp;            return Distance.FROM_10KM_TO_30KM.getPrice();</b>
+<b class="fc">&nbsp;        } else if (distance &gt; 2) {</b>
+<b class="fc">&nbsp;            return Distance.FROM_2KM_TO_10KM.getPrice();</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            return Distance.UP_T0_2KM.getPrice();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private Double sizeCost(Size size) {
+<b class="fc">&nbsp;        if (size == Size.LARGE) {</b>
+<b class="fc">&nbsp;            return Size.LARGE.getPrice();</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            return Size.SMALL.getPrice();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;
+&nbsp;    private Double fragileCost(Fragile fragile) {
+<b class="fc">&nbsp;        if (fragile == Fragile.FRAGILE) {</b>
+<b class="fc">&nbsp;            return Fragile.FRAGILE.getPrice();</b>
+&nbsp;        } else {
+<b class="fc">&nbsp;            return Fragile.NOT_FRAGILE.getPrice();</b>
+&nbsp;        }
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-03-19 14:48</div>
+</div>
+</body>
+</html>

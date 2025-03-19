@@ -1,0 +1,131 @@
+
+
+
+<!DOCTYPE html>
+<html id="htmlId">
+<head>
+  <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"> 
+  <title>Coverage Report > Distance</title>
+  <style type="text/css">
+    @import "../../css/coverage.css";
+    @import "../../css/idea.min.css";
+  </style>
+  <script type="text/javascript" src="../../js/highlight.min.js"></script>
+  <script type="text/javascript" src="../../js/highlightjs-line-numbers.min.js"></script>
+</head>
+
+<body>
+<div class="content">
+<div class="breadCrumbs">
+Current scope:     <a href="../../index.html">all classes</a>
+    <span class="separator">|</span>
+    <a href="../index.html">org.example.enums</a>
+</div>
+
+<h1>Coverage Summary for Class: Distance (org.example.enums)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Distance</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (8/8)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<pre>
+<code class="sourceCode" id="sourceCode">&nbsp;package org.example.enums;
+&nbsp;
+<b class="fc">&nbsp;public enum Distance {</b>
+&nbsp;
+&nbsp;    /**
+&nbsp;     * @param price добавочная стоимость в рублях в зависимости от расстояния до пункта назначения:
+&nbsp;     *    1. UP_T0_2KM - до 2 км
+&nbsp;     *    2. FROM_2KM_TO_10KM - от 2 до 10 км
+&nbsp;     *    3. FROM_10KM_TO_30KM - от 10 до 30 км
+&nbsp;     *    4. OVER_30KM - свыше 30 км
+&nbsp;     */
+&nbsp;
+<b class="fc">&nbsp;    UP_T0_2KM(50.0),</b>
+<b class="fc">&nbsp;    FROM_2KM_TO_10KM(100.0),</b>
+<b class="fc">&nbsp;    FROM_10KM_TO_30KM(200.0),</b>
+<b class="fc">&nbsp;    OVER_30KM(300.0);</b>
+&nbsp;
+&nbsp;    private final double price;
+&nbsp;
+<b class="fc">&nbsp;    Distance(double price) {</b>
+<b class="fc">&nbsp;        this.price = price;</b>
+&nbsp;    }
+&nbsp;
+&nbsp;    public double getPrice() {
+<b class="fc">&nbsp;        return price;</b>
+&nbsp;    }
+&nbsp;}
+</code>
+</pre>
+</div>
+
+<script type="text/javascript">
+(function() {
+    var msie = false, msie9 = false;
+    /*@cc_on
+      msie = true;
+      @if (@_jscript_version >= 9)
+        msie9 = true;
+      @end
+    @*/
+
+    if (!msie || msie && msie9) {
+      hljs.highlightAll()
+      hljs.initLineNumbersOnLoad();
+    }
+})();
+</script>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2025-03-19 14:48</div>
+</div>
+</body>
+</html>
