@@ -1,8 +1,34 @@
 package org.mycompany;
 
+import com.google.cloud.translate.Translate;
+import com.google.cloud.translate.Translation;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.*;
+
+@ExtendWith(MockitoExtension.class)
 class MyTranslationServiceTest {
+
+    @Mock
+    private Translate translate;
+
+    @Mock
+    private Translation translation;
+
+    private MyTranslationService myTranslationService;
+
+    @BeforeEach
+    void setUp() {
+        myTranslationService = new MyTranslationService(translate);
+    }
 
     /**
      * 1. Happy case test.
@@ -13,7 +39,22 @@ class MyTranslationServiceTest {
      */
     @Test
     void translateWithGoogle_anySentenceAndTargetLanguageIsRu_success() {
-        //TODO
+        String sentence = "Test sentence";
+        String targetLanguage = "ru";
+        String expectedResult = "Тестовое предложение";
+
+        when(translate.translate(eq(sentence), any())).thenReturn(translation);
+        when(translation.getTranslatedText()).thenReturn(expectedResult);
+
+        String actualResult = myTranslationService.translateWithGoogle(sentence, targetLanguage);
+
+        assertEquals(expectedResult, actualResult);
+
+        verify(translate).translate(eq(sentence), any());
+        verifyNoMoreInteractions(translate);
+
+        verify(translation).getTranslatedText();
+        verifyNoMoreInteractions(translation);
     }
 
     /**
@@ -24,7 +65,16 @@ class MyTranslationServiceTest {
      */
     @Test
     void translateWithGoogle_anySentenceAndTargetLanguageIsNotRu_failure() {
-        //TODO
+        String sentence = "Test sentence";
+        String targetLanguage = "br";
+
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
+                () -> myTranslationService.translateWithGoogle(sentence, targetLanguage));
+
+        assertEquals("only translation to Russian is currently supported!", exception.getMessage());
+
+        verifyNoInteractions(translate);
+        verifyNoInteractions(translation);
     }
 
     /**
@@ -36,6 +86,19 @@ class MyTranslationServiceTest {
      */
     @Test
     void translateWithGoogle_googleTranslateThrowsException_failure() {
-        //TODO
+        String sentence = "Test sentence";
+        String targetLanguage = "ru";
+
+        when(translate.translate(eq(sentence), any())).thenThrow(new RuntimeException());
+
+        MyTranslationServiceException exception = assertThrows(MyTranslationServiceException.class,
+                () -> myTranslationService.translateWithGoogle(sentence, targetLanguage));
+
+        assertEquals("Exception while calling Google Translate API", exception.getMessage());
+
+        verify(translate).translate(eq(sentence), any());
+        verifyNoMoreInteractions(translate);
+
+        verifyNoInteractions(translation);
     }
 }
